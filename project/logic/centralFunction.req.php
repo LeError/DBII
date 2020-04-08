@@ -27,9 +27,9 @@
     /**
      * Persists a comment of a user given on a survey
      * @author Robin Herder
-     * @param $matricule_number
-     * @param $title_short
-     * @param $comment
+     * @param $matricule_number identifier of student
+     * @param $title_short identifier of survey
+     * @param $comment comment text
      */
     function insertSurveyComment($matricule_number, $title_short, $comment) {
         $query = getDbConnection()->prepare(
