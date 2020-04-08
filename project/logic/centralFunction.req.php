@@ -40,4 +40,31 @@
         $query->execute();
     }
 
+
+    /**
+    * Procedure to enter the points awarded for a matriculation number.
+    * @author Leonie Rauch
+    * @param $matricule_number
+    * @param $id
+    * @param $value
+    */
+    function savescoringsystem($matricule_number, $id, $value){
+        $stmt = getDbConnection()->prepare(
+            "DELETE FROM  survey_site.answer WHERE id = ?, matricule_number = ?;"
+        );
+        $stmt->bind_param('is',$id, $matricule_number, $id);
+        $stmt->execute();
+        $stmt->close();
+
+        $stmt = getDbConnection()->prepare(
+            "INSERT INTO survey_site.answer(id, matricule_number, value) VALUES (?, ?, ?);"
+            );
+        $stmt->bind_param('isi',$id, $matricule_number, $value);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+
+
 ?>
+
