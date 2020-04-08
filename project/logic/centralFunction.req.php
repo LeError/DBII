@@ -48,23 +48,24 @@
     * @param $id
     * @param $value
     */
-    function savescoringsystem($matricule_number, $id, $value){
-        $stmt = getDbConnection()->prepare(
-            "DELETE FROM  survey_site.answer WHERE id = ?, matricule_number = ?;"
-        );
-        $stmt->bind_param('is',$id, $matricule_number, $id);
-        $stmt->execute();
-        $stmt->close();
-
-        $stmt = getDbConnection()->prepare(
-            "INSERT INTO survey_site.answer(id, matricule_number, value) VALUES (?, ?, ?);"
-            );
-        $stmt->bind_param('isi',$id, $matricule_number, $value);
-        $stmt->execute();
-        $stmt->close();
+    function savesCoringSystem($id,$matricule_number, $value){
+       $test = getDbConnection()->prepare(
+            "SELECT * FROM survey_site.answer a WHERE a.id = ? AND a.matricule_number = ?;");
+        $test->bind_param('is', $id, $matricule_number);
+        $test->execute();
+        $rows = mysqli_num_rows($test->get_result());
+        if($rows > 0) {
+            $query = getDbConnection()->prepare(
+                "UPDATE survey_site.answer SET value = ? WHERE id = ? AND matricule_number = ?");
+            $query->bind_param('iis', $value, $id, $matricule_number);
+            $query->execute();
+            $query->close();
+        } else {
+            $stmt = getDbConnection()->prepare(
+                "INSERT INTO survey_site.answer(id, matricule_number, value) VALUES (?, ?, ?);");
+            $stmt->bind_param('isi', $id, $matricule_number, $value);
+            $stmt->execute();
+            $stmt->close();
+        }
     }
-
-
-
 ?>
-
