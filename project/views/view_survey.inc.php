@@ -6,12 +6,14 @@
  *
  * @author     Moritz Bürkle
  */
+
+include_once 'logic/db.req.php';
 ?>
 
 <div class="ui container">
 
     <br>
-    <form method="post" action="index.php">
+    <form method="get" action="index.php">
         <table width="50%" border="0"  cellspacing="10px">
             <tr>
                 <th align="left" colspan="2">Create survey</th>
@@ -34,25 +36,39 @@
         </table>
 
         <?php
-        if(isset($_POST['createQuestion'])){
-            createQuestionsHTML();
 
+        global $link;
+
+        if(isset($_GET['createQuestion'])){
+            createQuestionsHTML();
+        }
+        if(isset($_GET['createSurvey'])){
+            createSurvey();
         }
 
+
         function createQuestionsHTML(){
+
+
+            $titleShort = $_GET['titleShort'];
+            $title = $_GET['title'];
+            $username = "HARDCODEUSER";
+
+            global $titleShort, $title, $username;
+
             echo "
             <table width='50%' border='0'  cellspacing='10px'>
             <tr>
                 <th align='left' colspan='2'>Create questions</th>
             </tr>
             ";
-            $numberOfQuestions = $_POST['numberOfQuestions'];
+            $numberOfQuestions = $_GET['numberOfQuestions'];
 
             for($y = 1; $y < $numberOfQuestions+1; $y++){
                 echo "
                 <tr>
-                <td>Frage {$y}:</td>
-                <td><input maxlength='100' name='frage{$y}' type='text' size='45'/></td>
+                <td>Question {$y}:</td>
+                <td><input maxlength='100' name='question[]' type='text' size='60'/></td>
                 </tr>
                  ";
             }
@@ -62,6 +78,24 @@
             </tr>
             </table>
             ";
+
+        }
+        function createSurvey(){
+            //Übertragung der GLOBALS in Variablen, da GLOBALS nicht in INSERT INTO statement angesprochen werden können.
+            $titleShort=$GLOBALS['titleShort'];
+            $title=$GLOBALS['title'];
+            $username=$GLOBALS['$username'];
+
+            //Create data survey
+            $sql = "INSERT INTO survey (title_short, title, username) VALUES ('$titleShort',$title,$username);";
+            mysqli_query($GLOBALS['link'], $sql);
+            //Create data questions
+            $questionsArray = $_GET['question[]'];
+            foreach ($questionsArray as $question){
+                $sql = "INSERT INTO question (question, title_short) VALUES ('$question','$titleShort');";
+                mysqli_query($GLOBALS['link'], $sql);
+            }
+            echo "Survey succesfully created";
 
         }
         ?>
