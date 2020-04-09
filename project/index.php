@@ -1,56 +1,66 @@
 <?php
 
-    /**
-     * index.php
-     *
-     * Entry Point for the Website and loads (requires) the php logic files
-     *
-     * @author     Robin Herder
-     */
+/**
+ * index.php
+ *
+ * Entry Point for the Website and loads (requires) the php logic files
+ *
+ * @author     Robin Herder
+ */
 
-    //Define constants
-    //Navigation texts
-    define("NAV_LBL_TITLE", "DHBW - Survey Site");
-    define("NAV_LBL_SURVEY", "Surveys");
-    define("NAV_LBL_USER_MANAGEMENT", "Survey User Management");
-    define("NAV_LBL_RESULTS", "Results");
-    //Navigation links
-    define("NAV_URL_TITLE", "index.php");
-    define("NAV_URL_SURVEY", "index.php?view=survey");
-    define("NAV_URL_USER_MANAGEMENT", "index.php?view=user_mgm");
-    define("NAV_URL_RESULTS", "index.php?view=results");
+//Define constants
+//Navigation texts
+define("NAV_LBL_TITLE", "DHBW - Survey Site");
+define("NAV_LBL_SURVEY", "Surveys");
+define("NAV_LBL_USER_MANAGEMENT", "Survey User Management");
+define("NAV_LBL_RESULTS", "Results");
+//Navigation links
+define("NAV_URL_TITLE", "index.php");
+define("NAV_URL_SURVEY", "index.php?view=survey");
+define("NAV_URL_USER_MANAGEMENT", "index.php?view=user_mgm");
+define("NAV_URL_RESULTS", "index.php?view=results");
 
-    //Session Management
-    session_start();
-    define("SESSION_ID", session_id());
+//Session Management
+session_start();
+define("SESSION_ID", session_id());
 
-    //Establish database connection
-    require("logic/db.req.php");
-    getDbConnection();
+//Establish database connection
+require("logic/db.req.php");
+getDbConnection();
 
-    //Load current view
-    require("logic/views.req.php");
+//Load current view
+require("logic/views.req.php");
 
-    //Access to central function
-    require("logic/centralFunction.req.php");
+//Access to central function
+require("logic/centralFunction.req.php");
 
+//Access to user management
+require("logic/usermgm.req.php");
+//$_SESSION[SESSION_ROLE] = 'Admin';
+//session_destroy();
 ?>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no"/>
-        <meta name="description" content="Semantic-UI-Forest, collection of design, themes and templates for Semantic-UI."/>
-        <meta name="keywords" content="Semantic-UI, Theme, Design, Template"/>
-        <meta name="author" content="PPType"/>
-        <meta name="theme-color" content="#ffffff"/>
-        <title><?php echo NAV_LBL_TITLE?></title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" type="text/css"/>
-        <link rel="stylesheet" href="css/base.css" type="text/css"/>
-    </head>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no"/>
+    <meta name="description" content="Semantic-UI-Forest, collection of design, themes and templates for Semantic-UI."/>
+    <meta name="keywords" content="Semantic-UI, Theme, Design, Template"/>
+    <meta name="author" content="PPType"/>
+    <meta name="theme-color" content="#ffffff"/>
+    <title><?php echo NAV_LBL_TITLE ?></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+          type="text/css"/>
+    <link rel="stylesheet" href="css/base.css" type="text/css"/>
+</head>
 
 <body id="root">
+
+<?php
+if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE], ROLE_ADMIN)) {
+    ?>
+
     <div class="ui tablet computer only padded grid">
         <div class="ui borderless fluid huge inverted menu">
             <div class="ui container">
@@ -80,23 +90,80 @@
     </div>
     <div class="ui center container">
         <?php
-            //Load View from GET
-            require (loadViews());
+        //Load View from GET
+        require(loadViews());
         ?>
     </div>
 
+    <?php
+} else if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE], ROLE_USER)) {
+    ?>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $(".ui.toggle.button").click(function () {
-                $(".mobile.only.grid .ui.vertical.menu").toggle(100);
-            });
-        });
-    </script>
-    </body>
+    <?php
+} else {
+    ?>
+
+    <div class="ui middle aligned center aligned grid">
+        <div class="column" style="width: 450px; margin-top: 150px">
+            <h2 class="ui image header">
+                <div class="content">
+                   <i><?php echo NAV_LBL_TITLE ?></i> - User
+                </div>
+            </h2>
+            <form id="login" action="" method="post" class="ui large form">
+                <div class="ui stacked secondary  segment">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" name="user" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input type="password" name="pass" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="ui fluid large teal submit button" style="margin-bottom: 15px">Login</div>
+                    <div class="ui fluid large teal submit button">Register</div>
+                </div>
+                <div class="ui error message"></div>
+            </form>
+        </div>
+    </div>
+    <div class="ui middle aligned center aligned grid">
+        <div class="column" style="width: 450px; margin-top: 50px">
+            <h2 class="ui image header">
+                <div class="content">
+                    <i><?php echo NAV_LBL_TITLE ?></i> - Survey User
+                </div>
+            </h2>
+            <form id="login" action="" method="post" class="ui large form">
+                <div class="ui stacked secondary  segment">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" name="user" placeholder="Matricule Number">
+                        </div>
+                    </div>
+                    <div class="ui fluid large teal submit button">Login</div>
+                </div>
+                <div class="ui error message"></div>
+            </form>
+        </div>
+    </div>
+
+    <?php
+}
+?>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script src="js/login.js"></script>
+<script src="js/navigation.js"></script>
+</body>
 </html>
 <?php
-    //close database connection
-    cleanUpDb();
+//close database connection
+cleanUpDb();
 ?>
