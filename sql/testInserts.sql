@@ -1,8 +1,8 @@
 -- Insert Users
-INSERT INTO user (username, password) VALUES ("Leoni", "test");
-INSERT INTO user (username, password) VALUES ("Moe", "test");
-INSERT INTO user (username, password) VALUES ("Malik", "test");
-INSERT INTO user (username, password) VALUES ("Robin", "test");
+INSERT INTO user (username, password) VALUES ("Leoni", "$2y$10$bFmkrG6gAem093R2tqNhZuL4xWAxYdThrEhHKp7t4ed8jE6eiWhbm");
+INSERT INTO user (username, password) VALUES ("Moe", "$2y$10$bFmkrG6gAem093R2tqNhZuL4xWAxYdThrEhHKp7t4ed8jE6eiWhbm");
+INSERT INTO user (username, password) VALUES ("Malik", "$2y$10$bFmkrG6gAem093R2tqNhZuL4xWAxYdThrEhHKp7t4ed8jE6eiWhbm");
+INSERT INTO user (username, password) VALUES ("Robin", "$2y$10$bFmkrG6gAem093R2tqNhZuL4xWAxYdThrEhHKp7t4ed8jE6eiWhbm");
 
 -- Insert Surveys
 INSERT INTO survey (title_short, title, username) VALUES ("test0", "TEST 0", "Leoni");
