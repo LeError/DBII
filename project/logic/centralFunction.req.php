@@ -18,6 +18,7 @@
         $query->bind_param('ss', $title_short, $matricule_number);
         $query->execute();
         $rows = mysqli_num_rows($query->get_result());
+        $query->close();
         if($rows > 0) {
             return true;
         }
@@ -38,6 +39,7 @@
         );
         $query->bind_param('sss', $title_short, $matricule_number, $comment);
         $query->execute();
+        $query->close();
     }
 
 
