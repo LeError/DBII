@@ -28,7 +28,6 @@
     </form>
 
         <?php
-        $link;
 
         if(isset($_GET['createSurvey'])){
             createQuestionsHTML();
