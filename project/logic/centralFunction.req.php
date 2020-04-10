@@ -55,7 +55,7 @@
             "INSERT INTO survey_site.survey (title_short, title, username) 
             VALUES (?, ?, ?);"
         );
-        $query->bind_param($title_short, $title, $username);
+        $query->bind_param('sss', $title_short, $title, $username);
         $query->execute();
 
         foreach ($questions as $question) {
@@ -63,7 +63,7 @@
                 "INSERT INTO survey_site.question (question, title_short) 
             VALUES (?, ?);"
             );
-            $query->bind_param($question, $title_short);
+            $query->bind_param('ss',$question, $title_short);
             $query->execute();
         }
 
