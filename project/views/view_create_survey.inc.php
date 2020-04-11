@@ -65,27 +65,11 @@
 
     }
     function createSurvey(){
-
         $title= $_GET['title'];
         $titleShort= $_GET['titleShort'];
         $username = "HARDCODEUSER";
         $questions = $_GET['question'];
-        //echo $title.$titleShort.$username;
-        //print_r($questions);
         insertSurvey($username, $title, $titleShort, $questions);
-        /*
-        //Create data survey
-        $sql = "INSERT INTO survey (title_short, title, username) VALUES ('$titleShort',$title,$username);";
-        mysqli_query($GLOBALS['link'], $sql);
-
-        //Create data questions
-        $questionsArray = $_GET['question[]'];
-        foreach ($questionsArray as $question){
-            $sql = "INSERT INTO question (question, title_short) VALUES ('$question','$titleShort');";
-            mysqli_query($GLOBALS['link'], $sql);
-        }
-        echo "Survey succesfully created";
-        */
     }
     ?>
     </form>
