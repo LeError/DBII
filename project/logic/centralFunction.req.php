@@ -65,6 +65,7 @@
             );
             $query->bind_param('ss',$question, $title_short);
             $query->execute();
+            $query->close();
         }
 
     }
