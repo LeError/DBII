@@ -38,6 +38,7 @@ require("logic/centralFunction.req.php");
 require("logic/usermgm.req.php");
 //$_SESSION[SESSION_ROLE] = 'Admin';
 //session_destroy();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -115,17 +116,17 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE],
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="user icon"></i>
-                            <input type="text" name="user" placeholder="Username">
+                            <input id="loginUser" type="text" name="user" placeholder="Username">
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="lock icon"></i>
-                            <input type="password" name="pass" placeholder="Password">
+                            <input id="loginPass" type="password" name="pass" placeholder="Password">
                         </div>
                     </div>
-                    <div class="ui fluid large teal submit button" style="margin-bottom: 15px">Login</div>
-                    <div class="ui fluid large teal submit button">Register</div>
+                    <div class="ui fluid large teal button" onclick="callUserLogin()" style="margin-bottom: 15px">Login</div>
+                    <div class="ui fluid large teal button">Register</div>
                 </div>
                 <div class="ui error message"></div>
             </form>
@@ -161,6 +162,7 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE],
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script src="js/login.js"></script>
 <script src="js/navigation.js"></script>
+<script src="js/ajax.js"></script>
 </body>
 </html>
 <?php
