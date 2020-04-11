@@ -77,7 +77,7 @@
     * @param $id
     * @param $value
     */
-    function savesCoringSystem($id,$matricule_number, $value){
+    function saveScoringSystem($id,$matricule_number, $value){
        $test = getDbConnection()->prepare(
             "SELECT * FROM survey_site.answer a WHERE a.id = ? AND a.matricule_number = ?;");
         $test->bind_param('is', $id, $matricule_number);
