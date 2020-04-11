@@ -1,14 +1,17 @@
-     <!--
-     * index.php
-     *
-     * Survey View
-     *
-     * @author     Malik Press
-     * -->
-
+<?php
+/**
+ * view_survey.inc.php
+ *
+ * lists surveys and actions
+ *
+ * @author Malik Press
+ */
+?>
 <div class="ui grid">
-       <div class="ui sixteen wide column">
-            <button class="ui positive labeled icon button" style="margin-top: 3vh"><i class="plus icon"></i>Neue Umfrage erstellen</button>
+       <div class="ui sixteen wide column right aligned">
+           <a href="index.php?view=create_survey">
+                <button class="ui positive labeled icon button" style="margin-top: 3vh"><i class="plus icon"></i>Neue Umfrage erstellen</button>
+           </a>
        </div>
        <div class="ui sixteen wide column">
             <h3 class="ui header">Meine Umfragen</h3>
@@ -27,4 +30,5 @@
                 <button class="ui inverted red icon button"><i class="trash icon"></i></button>
             </div>
        </div>
+    <br>
 </div>

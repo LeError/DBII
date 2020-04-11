@@ -42,13 +42,43 @@
 
 
     /**
+    * Insert survey and questions
+    * @author Moritz Bürkle
+    * @param $username
+    * @param $title
+    * @param $title_short
+    * @param $questions (Array)
+    */
+    function insertSurvey($username, $title, $title_short, $questions){
+
+        $query = getDbConnection()->prepare(
+            "INSERT INTO survey_site.survey (title_short, title, username) 
+            VALUES (?, ?, ?);"
+        );
+        $query->bind_param('sss', $title_short, $title, $username);
+        $query->execute();
+
+        foreach ($questions as $question) {
+            $query = getDbConnection()->prepare(
+                "INSERT INTO survey_site.question (question, title_short) 
+            VALUES (?, ?);"
+            );
+            $query->bind_param('ss',$question, $title_short);
+            $query->execute();
+            $query->close();
+        }
+
+    }
+
+
+    /**
     * Procedure to enter the points awarded for a matriculation number.
     * @author Leonie Rauch
     * @param $matricule_number
     * @param $id
     * @param $value
     */
-    function savesCoringSystem($id,$matricule_number, $value){
+    function saveScoringSystem($id,$matricule_number, $value){
        $test = getDbConnection()->prepare(
             "SELECT * FROM survey_site.answer a WHERE a.id = ? AND a.matricule_number = ?;");
         $test->bind_param('is', $id, $matricule_number);
