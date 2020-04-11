@@ -1,5 +1,5 @@
-<div class="ui container">
-    <form method="get" action="index.php?view=create_survey">
+<div class="ui container center aligned">
+    <form method="POST" action="index.php?view=create_survey">
         <table width="50%" border="0"  cellspacing="10px">
             <tr>
                 <th align="left" colspan="2">Create survey</th>
@@ -17,16 +17,16 @@
 
     <?php
 
-    if(isset($_GET['createSurvey'])){
+    if(isset($_POST['createSurvey'])){
         createQuestionsHTML();
     }
-    if(isset($_GET['submitSurvey'])){
+    if(isset($_POST['submitSurvey'])){
         createSurvey();
     }
     function createQuestionsHTML(){
 
         echo "
-            <form method=\"get\" action=\"index.php?view=create_survey\">
+            <form method=\"POST\" action=\"index.php?view=create_survey\">
             <table width='50%' border='0'  cellspacing='10px'>
             <tr>
                 <th align='left' colspan='2'>Set title and title short</th>
@@ -45,7 +45,7 @@
                 <th align='left' colspan='2'>Create questions</th>
             </tr>
             ";
-        $numberOfQuestions = $_GET['numberOfQuestions'];
+        $numberOfQuestions = $_POST['numberOfQuestions'];
 
         for($y = 1; $y < $numberOfQuestions+1; $y++){
             echo "
@@ -65,10 +65,10 @@
 
     }
     function createSurvey(){
-        $title= $_GET['title'];
-        $titleShort= $_GET['titleShort'];
-        $username = "HARDCODEUSER";
-        $questions = $_GET['question'];
+        $title= $_POST['title'];
+        $titleShort= $_POST['titleShort'];
+        $username = "Robin";
+        $questions = $_POST['question'];
         insertSurvey($username, $title, $titleShort, $questions);
     }
     ?>
