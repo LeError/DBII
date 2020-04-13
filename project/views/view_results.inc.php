@@ -7,7 +7,6 @@
  * @author     Moritz Bürkle
  */
 
-//get assigned surveys from user
 $username="Leoni";
 $assignedSurveys=getAssignedSurveys($username);
 ?>
@@ -72,7 +71,7 @@ $assignedSurveys=getAssignedSurveys($username);
                 </td>
             </tr>
             <tr>
-                <td align=\"left\" colspan=\"2\"><input type=\"submit\" value=\"Select course\" name=\"createSelectCourse\"></td>
+                <td align=\"left\" colspan=\"2\"><input type=\"submit\" value=\"Show results\" name=\"createSelectCourse\"></td>
             </tr>
         </table>
     </form>";
