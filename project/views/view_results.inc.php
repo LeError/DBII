@@ -13,7 +13,7 @@ $assignedSurveys=getAssignedSurveys($username);
 ?>
 <div class="ui container">
     <br>
-    <form method="get" action="index.php">
+    <form method="post" action="index.php?view=results">
         <table width="50%" border="0"  cellspacing="10px">
             <tr>
                 <th align="left" colspan="2">Choose assigned survey</th>
@@ -41,6 +41,7 @@ $assignedSurveys=getAssignedSurveys($username);
     <?php
 
     if(isset($_POST['createSelectCourse'])){
+
 
         $assignedSurveyName = $_POST['selectedAssignedSurvey'];
         $assignedSurveyCourses= getAssignedSurveyCourses($assignedSurveyName);
