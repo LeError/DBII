@@ -110,4 +110,17 @@
         $query->execute();
         return $query->get_result();
     }
+    function getAssignedSurveyCourses($assignedSurveyName){
+
+        $query = getDbConnection()->prepare(
+            "SELECT a.course_short FROM survey_site.assigned a
+                WHERE a.title_short = 
+                (SELECT s.title_short FROM survey_site.survey s 
+                WHERE s.title = ?)"
+        );
+        $query->bind_param('s', $assignedSurveyName);
+        $query->execute();
+        return $query->get_result();
+    }
+
 ?>
