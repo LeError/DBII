@@ -1,4 +1,6 @@
 -- Insert Users
+
+
 INSERT INTO user (username, password) VALUES ("Leoni", "test");
 INSERT INTO user (username, password) VALUES ("Moe", "test");
 INSERT INTO user (username, password) VALUES ("Malik", "test");

@@ -98,4 +98,16 @@
             $stmt->close();
         }
     }
+
+    function getAssignedSurveys($username) {
+        $query = getDbConnection()->prepare(
+            "SELECT DISTINCT s.title FROM survey_site.survey s, survey_site.assigned a
+               WHERE s.title_short = a.title_short
+               AND s.username = ?"
+
+        );
+        $query->bind_param('s', $username);
+        $query->execute();
+        return $query->get_result();
+    }
 ?>
