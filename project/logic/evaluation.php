@@ -21,17 +21,47 @@ class evaluation
     public function createResultsArray(){
 
         $query = getDbConnection()->prepare(
-            "SELECT q.question, a.value FROM survey_site.answer a, question q, survey_user su, survey_user_group sug, survey s, assigned_status ass
-                WHERE q.id = a.id 
-                AND a.matricule_number = su.matricule_number
-                AND ass.matricule_number = su.matricule_number
-                AND ass.title_short = ?
-                AND su.course_short = ?"
+            "SELECT q.question FROM survey_site.survey s, survey_site.question q
+                WHERE q.title_short = s.title_short 
+                AND q.title_short = ?"
         );
-        $query->bind_param('ss', $this->title_short, $this->course_short);
+        $query->bind_param('s', $this->title_short);
         $query->execute();
-        return $query->get_result();
+        $questions = $query->get_result();
 
+        foreach ($questions as $question){
+            $query = getDbConnection()->prepare(
+                "SELECT  FROM survey_site.survey s, survey_site.question q, survey_site.answer a, survey_user su, survey_user_group sug
+                WHERE q.id = a.id 
+                AND q.title_short = s.title_short                
+                AND a.matricule_number = su.matricule_number
+                AND sug.course_short = su.course_short
+                AND s.title_short = ?
+                AND sug.course_short = ?                 
+                AND q.question = ?
+                "
+            );
+            $query->bind_param('sss', $this->title_short, $this->course_short, $question);
+            $query->execute();
+            $values = $query->get_result();
+
+            $row = 0;
+            $results=array();
+            $results[$row][0] = $question;
+            $results[$row][1] = (array_sum($values))/count($values);
+            $results[$row][2] = min($values);
+            $results[$row][3] = max($values);
+            $results[$row][4] = calculateStandardDeviation($values, $results[$row][1]);
+        }
+        $this->results = $results;
+    }
+
+    public static function calculateStandardDeviation($values, $avg){
+        $sum = 0;
+        foreach ($values as $value){
+            $sum+=pow(($value - $avg), 2);
+        }
+        return sqrt($sum/count($values));
     }
 
 
