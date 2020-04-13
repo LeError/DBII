@@ -25,11 +25,10 @@ class evaluation
                 WHERE q.id = a.id 
                 AND a.matricule_number = su.matricule_number
                 AND ass.matricule_number = su.matricule_number
-                AND su.course_short = ?
-                AND ass.title_short = ?"
-
+                AND ass.title_short = ?
+                AND su.course_short = ?"
         );
-        $query->bind_param('s', $assignedSurveyName);
+        $query->bind_param('ss', $this->title_short, $this->course_short);
         $query->execute();
         return $query->get_result();
 
