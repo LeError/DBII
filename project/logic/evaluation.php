@@ -64,6 +64,15 @@ class evaluation
         return sqrt($sum/count($values));
     }
 
+    public function getCalculatedValuesQuestion($question){
+        for ($i=0; i<$this->results.length; $i++){
+            if(strcmp($this->results[$i][0], $question) == 0){
+                $row = array($this->results[$i]);
+                return $row;
+            }
+        }
+    }
+
 
 
 
