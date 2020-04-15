@@ -17,7 +17,6 @@ $assignedSurveys=getAssignedSurveys($username);
             <tr>
                 <th align="left" colspan="2">Choose assigned survey</th>
             </tr>
-
             <tr>
                 <td>Survey title:</td>
                 <td>
@@ -71,10 +70,16 @@ $assignedSurveys=getAssignedSurveys($username);
                 </td>
             </tr>
             <tr>
-                <td align=\"left\" colspan=\"2\"><input type=\"submit\" value=\"Show results\" name=\"createSelectCourse\"></td>
+                <td align=\"left\" colspan=\"2\"><input type=\"submit\" value=\"Show results\" name=\"showResults\"></td>
             </tr>
         </table>
     </form>";
+    }
+    if(isset($_POST['showResults'])){
+
+        $assignedSurveyName = $_POST['selectedAssignedSurvey'];
+        $selectedCourse = $_POST['selectedCourse'];
+
     }
     ?>
 

@@ -75,6 +75,7 @@
     }
     function createSurvey(){
         $title= $_POST['title'];
+        // to do: check if title is already taken!
         $titleShort= $_POST['titleShort'];
         $username = "Robin";
         $questions = $_POST['question'];

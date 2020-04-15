@@ -91,15 +91,6 @@ class evaluation
         }
         return $commentsWithSpace;
     }
-
-
-
-
-
-
-
-
-
     /**
      * @return mixed
      */
