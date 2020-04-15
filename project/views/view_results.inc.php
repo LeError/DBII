@@ -36,34 +36,6 @@ $assignedSurveys=getAssignedSurveys($username);
             </tr>
         </table>
     </form>
-
-    <table width="100%" border="0"  cellspacing="10px">
-        <tr>
-            <th align="left" colspan="2">Presentation of results</th>
-        </tr>
-        <tr>
-            <td>Question</td>
-            <td>Average</td>
-            <td>Minimum</td>
-            <td>Maximum</td>
-            <td>Standard deviation</td>
-        </tr>
-        <tr>
-            <td>$results[i][0]</td>
-            <td>$results[i][1]</td>
-            <td>$results[i][2]</td>
-            <td>$results[i][3]</td>
-            <td>$results[i][4]</td>
-        </tr>
-        <tr>
-            <td>$results[i][0]</td>
-            <td>$results[i][1]</td>
-            <td>$results[i][2]</td>
-            <td>$results[i][3]</td>
-            <td>$results[i][4]</td>
-        </tr>
-    </table>
-
     <?php
 
     if(isset($_POST['createSelectCourse'])){
@@ -118,9 +90,36 @@ $assignedSurveys=getAssignedSurveys($username);
         $results = $evaluationInstance->getResults();
         $evaluationInstance->createCommentsInArray();
         $comments = $evaluationInstance->getComments();
+
+        echo "
+            <table width=\"100%\" border=\"0\"  cellspacing=\"10px\">
+        <tr>
+            <th align=\"left\" colspan=\"2\">Presentation of results</th>
+        </tr>
+        <tr>
+            <td>Question</td>
+            <td>Average</td>
+            <td>Minimum</td>
+            <td>Maximum</td>
+            <td>Standard deviation</td>
+        </tr>";
+
+        for ($i=0; i<$this->results.length; $i++){
+                echo "
+         <tr>
+            <td>$results[i][0]</td>
+            <td>$results[i][1]</td>
+            <td>$results[i][2]</td>
+            <td>$results[i][3]</td>
+            <td>$results[i][4]</td>
+        </tr>";
+        }
+        echo "<tr>";
+        for ($j=0; i<$this->results.length; $i++) {
+            echo "<td>$comments[i]</td>";
+        }
+        echo "</tr>
+        </table>";
     }
-
     ?>
-
-
 </div>
