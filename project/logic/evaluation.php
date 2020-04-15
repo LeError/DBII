@@ -9,9 +9,10 @@
 
 class evaluation
 {
-    public $title_short;
-    public $course_short;
-    public $results;
+    private $title_short;
+    private $course_short;
+    private $results;
+    private $comments;
 
     public function __construct($title_short,$course_short){
         $this->title_short = $title_short;
@@ -72,7 +73,8 @@ class evaluation
             }
         }
     }
-    public function getAllComments(){
+
+    public function getCommentsWithSpace(){
         $query = getDbConnection()->prepare(
             "SELECT ac.comment FROM survey_site.survey s, survey_site.assigned_comment ac, survey_user_group sug
                 WHERE ac.title_short = s.title_short
@@ -85,12 +87,27 @@ class evaluation
         $query->execute();
         $comments = $query->get_result();
 
+
         $commentsWithSpace="";
         foreach ($comments as $comment){
             $commentsWithSpace+=$comment+" ";
         }
         return $commentsWithSpace;
     }
+    public function createCommentsInArray(){
+        $query = getDbConnection()->prepare(
+            "SELECT ac.comment FROM survey_site.survey s, survey_site.assigned_comment ac, survey_user_group sug
+                WHERE ac.title_short = s.title_short
+                AND s.title_short = sug.title_short               
+                AND s.title_short = ?
+                AND sug.course_short = ?                 
+                "
+        );
+        $query->bind_param('ss', $this->title_short, $this->course_short);
+        $query->execute();
+        $this->comments = $query->get_result();
+    }
+
     /**
      * @return mixed
      */
@@ -119,4 +136,37 @@ class evaluation
     {
         $this->course_short = $course_short;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getResults()
+    {
+        return $this->results;
+    }
+
+    /**
+     * @param mixed $results
+     */
+    public function setResults($results)
+    {
+        $this->results = $results;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param mixed $comments
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+    }
+
 }

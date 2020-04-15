@@ -36,12 +36,41 @@ $assignedSurveys=getAssignedSurveys($username);
             </tr>
         </table>
     </form>
+
+    <table width="100%" border="0"  cellspacing="10px">
+        <tr>
+            <th align="left" colspan="2">Presentation of results</th>
+        </tr>
+        <tr>
+            <td>Question</td>
+            <td>Average</td>
+            <td>Minimum</td>
+            <td>Maximum</td>
+            <td>Standard deviation</td>
+        </tr>
+        <tr>
+            <td>$results[i][0]</td>
+            <td>$results[i][1]</td>
+            <td>$results[i][2]</td>
+            <td>$results[i][3]</td>
+            <td>$results[i][4]</td>
+        </tr>
+        <tr>
+            <td>$results[i][0]</td>
+            <td>$results[i][1]</td>
+            <td>$results[i][2]</td>
+            <td>$results[i][3]</td>
+            <td>$results[i][4]</td>
+        </tr>
+    </table>
+
     <?php
 
     if(isset($_POST['createSelectCourse'])){
 
 
         $assignedSurveyName = $_POST['selectedAssignedSurvey'];
+
         $assignedSurveyCourses= getAssignedSurveyCourses($assignedSurveyName);
         createSelectCourse($assignedSurveyCourses);
     }
@@ -80,7 +109,17 @@ $assignedSurveys=getAssignedSurveys($username);
         $assignedSurveyName = $_POST['selectedAssignedSurvey'];
         $selectedCourse = $_POST['selectedCourse'];
 
+        showResults($assignedSurveyName,$selectedCourse);
     }
+    function showResults($assignedSurveyName,$selectedCourse){
+
+        $evaluationInstance = new evaluation(getTitleShort($assignedSurveyName),$selectedCourse);
+        $evaluationInstance->createResultsArray();
+        $results = $evaluationInstance->getResults();
+        $evaluationInstance->createCommentsInArray();
+        $comments = $evaluationInstance->getComments();
+    }
+
     ?>
 
 

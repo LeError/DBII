@@ -122,5 +122,14 @@
         $query->execute();
         return $query->get_result();
     }
+    function getTitleShort($title){
+        $query = getDbConnection()->prepare(
+            "SELECT s.title_short FROM survey_site.survey s
+                WHERE s.title = ? "
+        );
+        $query->bind_param('s', $title);
+        $query->execute();
+        return $query->get_result();
+    }
 
 ?>
