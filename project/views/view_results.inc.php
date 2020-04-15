@@ -7,6 +7,7 @@
  * @author     Moritz Bürkle
  */
 
+require('logic/evaluation.php');
 $username="Leoni";
 $assignedSurveys=getAssignedSurveys($username);
 ?>
@@ -42,6 +43,7 @@ $assignedSurveys=getAssignedSurveys($username);
 
 
         $assignedSurveyName = $_POST['selectedAssignedSurvey'];
+        $_SESSION["assignedSurveyName"] = $assignedSurveyName;
 
         $assignedSurveyCourses= getAssignedSurveyCourses($assignedSurveyName);
         createSelectCourse($assignedSurveyCourses);
@@ -50,7 +52,7 @@ $assignedSurveys=getAssignedSurveys($username);
     function createSelectCourse($assignedSurveyCourses){
 
         echo "
-                <form method=\"get\" action=\"index.php\">
+        <form method=\"post\" action=\"index.php?view=results\">
         <table width=\"50%\" border=\"0\"  cellspacing=\"10px\">
             <tr>
                 <th align=\"left\" colspan=\"2\">Choose course</th>
@@ -77,14 +79,11 @@ $assignedSurveys=getAssignedSurveys($username);
     </form>";
     }
     if(isset($_POST['showResults'])){
-
-        $assignedSurveyName = $_POST['selectedAssignedSurvey'];
         $selectedCourse = $_POST['selectedCourse'];
-
-        showResults($assignedSurveyName,$selectedCourse);
+        showResults($_SESSION["assignedSurveyName"],$selectedCourse);
     }
     function showResults($assignedSurveyName,$selectedCourse){
-
+//getTitleShort($assignedSurveyName)
         $evaluationInstance = new evaluation(getTitleShort($assignedSurveyName),$selectedCourse);
         $evaluationInstance->createResultsArray();
         $results = $evaluationInstance->getResults();
@@ -107,16 +106,16 @@ $assignedSurveys=getAssignedSurveys($username);
         for ($i=0; i<$this->results.length; $i++){
                 echo "
          <tr>
-            <td>$results[i][0]</td>
-            <td>$results[i][1]</td>
-            <td>$results[i][2]</td>
-            <td>$results[i][3]</td>
-            <td>$results[i][4]</td>
+            <td>$results[$i][0]</td>
+            <td>$results[$i][1]</td>
+            <td>$results[$i][2]</td>
+            <td>$results[$i][3]</td>
+            <td>$results[$i][4]</td>
         </tr>";
         }
         echo "<tr>";
         for ($j=0; i<$this->results.length; $i++) {
-            echo "<td>$comments[i]</td>";
+            echo "<td>$comments[$j]</td>";
         }
         echo "</tr>
         </table>";

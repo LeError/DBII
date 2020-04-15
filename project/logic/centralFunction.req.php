@@ -129,7 +129,8 @@
         );
         $query->bind_param('s', $title);
         $query->execute();
-        return $query->get_result();
+        $result = $query->get_result();
+        return $result;
     }
 
 ?>
