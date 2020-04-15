@@ -31,7 +31,7 @@ class evaluation
 
         foreach ($questions as $question){
             $query = getDbConnection()->prepare(
-                "SELECT  FROM survey_site.survey s, survey_site.question q, survey_site.answer a, survey_user su, survey_user_group sug
+                "SELECT a.value FROM survey_site.survey s, survey_site.question q, survey_site.answer a, survey_user su, survey_user_group sug
                 WHERE q.id = a.id 
                 AND q.title_short = s.title_short                
                 AND a.matricule_number = su.matricule_number
@@ -72,6 +72,30 @@ class evaluation
             }
         }
     }
+    public function getAllComments(){
+        $query = getDbConnection()->prepare(
+            "SELECT ac.comment FROM survey_site.survey s, survey_site.assigned_comment ac, survey_user_group sug
+                WHERE ac.title_short = s.title_short
+                AND s.title_short = sug.title_short               
+                AND s.title_short = ?
+                AND sug.course_short = ?                 
+                "
+        );
+        $query->bind_param('ss', $this->title_short, $this->course_short);
+        $query->execute();
+        $comments = $query->get_result();
+
+        $commentsWithSpace="";
+        foreach ($comments as $comment){
+            $commentsWithSpace+=$comment+" ";
+        }
+        return $commentsWithSpace;
+    }
+
+
+
+
+
 
 
 
