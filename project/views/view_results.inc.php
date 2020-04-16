@@ -121,8 +121,6 @@ $assignedSurveys=getAssignedSurveys($username);
         }
         echo "
         </table>";
-
-        echo $evaluationInstance->getCommentsWithSpace();
     }
     ?>
 </div>

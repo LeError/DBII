@@ -76,10 +76,13 @@ class evaluation
         return sqrt($sum/count($values));
     }
 
-    public function getCalculatedValuesQuestion($question){
-        for ($i=0; i<$this->results.length; $i++){
+    public function getCalculatedValuesForQuestion($question){
+        if(count($this->results) == 0){
+            self::createResultsArray();
+        }
+        for ($i=0; $i<count($this->results); $i++){
             if(strcmp($this->results[$i][0], $question) == 0){
-                $row = array($this->results[$i]);
+                $row = $this->results[$i];
                 return $row;
             }
         }
