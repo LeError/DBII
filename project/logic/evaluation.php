@@ -22,14 +22,19 @@ class evaluation
     public function createResultsArray(){
 
         $query = getDbConnection()->prepare(
-            "SELECT q.question FROM survey_site.survey s, survey_site.question q
-                WHERE q.title_short = s.title_short 
-                AND q.title_short = ?"
+            "SELECT q.question FROM survey_site.question q
+                WHERE q.title_short = ?  "
         );
         $query->bind_param('s', $this->title_short);
         $query->execute();
-        $questions = $query->get_result();
-
+        //$questions = $query->get_result();
+        $query->bind_result($question);
+        $questions= array();
+        while($query->fetch()){
+            $questions[] = $question;
+        }
+        $row = 0;
+        $results=array();
         foreach ($questions as $question){
             $query = getDbConnection()->prepare(
                 "SELECT a.value FROM survey_site.survey s, survey_site.question q, survey_site.answer a, survey_user su, survey_user_group sug
@@ -44,15 +49,19 @@ class evaluation
             );
             $query->bind_param('sss', $this->title_short, $this->course_short, $question);
             $query->execute();
-            $values = $query->get_result();
-
-            $row = 0;
-            $results=array();
+            //$values = $query->get_result();
+            $query->bind_result($value);
+            $values= array();
+            while($query->fetch()){
+                $values[] = $value;
+            }
+            $results[$row]=array();
             $results[$row][0] = $question;
             $results[$row][1] = (array_sum($values))/count($values);
             $results[$row][2] = min($values);
             $results[$row][3] = max($values);
-            $results[$row][4] = calculateStandardDeviation($values, $results[$row][1]);
+            $results[$row][4] = self::calculateStandardDeviation($values, $results[$row][1]);
+            $row++;
         }
         $this->results = $results;
     }
@@ -85,9 +94,11 @@ class evaluation
         );
         $query->bind_param('ss', $this->title_short, $this->course_short);
         $query->execute();
-        $comments = $query->get_result();
-
-
+        $query->bind_result($comment);
+        $comments= array();
+        while($query->fetch()){
+            $comments[] = $comment;
+        }
         $commentsWithSpace="";
         foreach ($comments as $comment){
             $commentsWithSpace+=$comment+" ";
@@ -96,16 +107,22 @@ class evaluation
     }
     public function createCommentsInArray(){
         $query = getDbConnection()->prepare(
-            "SELECT ac.comment FROM survey_site.survey s, survey_site.assigned_comment ac, survey_user_group sug
-                WHERE ac.title_short = s.title_short
-                AND s.title_short = sug.title_short               
-                AND s.title_short = ?
+            "SELECT ac.comment FROM survey_site.assigned_comment ac, survey_site.survey_user_group sug, survey_site.survey_user su
+                WHERE ac.matricule_number = su.matricule_number
+                AND su.course_short = sug.course_short               
+                AND ac.title_short = ?
                 AND sug.course_short = ?                 
                 "
         );
         $query->bind_param('ss', $this->title_short, $this->course_short);
         $query->execute();
-        $this->comments = $query->get_result();
+
+        $query->bind_result($comment);
+        $comments= array();
+        while($query->fetch()){
+            $comments[] = $comment;
+        }
+        $this->comments = $comments;
     }
 
     /**

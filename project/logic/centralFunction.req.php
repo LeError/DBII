@@ -130,7 +130,7 @@
         $query->bind_param('s', $title);
         $query->execute();
         $result = $query->get_result();
-        return $result;
+        return $result->fetch_assoc()['title_short'];
     }
 
 ?>

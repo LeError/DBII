@@ -103,7 +103,7 @@ $assignedSurveys=getAssignedSurveys($username);
             <td>Standard deviation</td>
         </tr>";
 
-        for ($i=0; i<$this->results.length; $i++){
+        for ($i=0; $i<count($results); $i++){
                 echo "
          <tr>
             <td>$results[$i][0]</td>
@@ -114,7 +114,7 @@ $assignedSurveys=getAssignedSurveys($username);
         </tr>";
         }
         echo "<tr>";
-        for ($j=0; i<$this->results.length; $i++) {
+        for ($j=0; $j<count($comments); $j++) {
             echo "<td>$comments[$j]</td>";
         }
         echo "</tr>
