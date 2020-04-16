@@ -43,11 +43,12 @@
         );
         $query->bind_param('s', $user);
         $query->execute();
-        if($query->get_result()->num_rows != 1) {
+        $result = $query->get_result();
+        if($result->num_rows != 1) {
             session_unset();
             return;
         }
-        $hashedPass = $query->get_result()->fetch_array()['password'];
+        $hashedPass = $result->fetch_assoc()['password'];
         $query->close();
         if(password_verify($pass, $hashedPass)) {
             if(password_needs_rehash($hashedPass, PASSWORD_DEFAULT)) {
