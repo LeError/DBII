@@ -9,8 +9,8 @@ $(document).ready(function () {
                         prompt: 'Please enter your Username'
                     },
                     {
-                        type   : 'length[6]',
-                        prompt : 'Your Username must be at least 6 characters long'
+                        type   : 'length[4]',
+                        prompt : 'Your Username must be at least 4 characters long'
                     }
                 ]
             },
@@ -22,8 +22,8 @@ $(document).ready(function () {
                         prompt: 'Please enter your password'
                     },
                     {
-                        type   : 'length[8]',
-                        prompt : 'Your password must be at least 8 characters long'
+                        type   : 'length[4]',
+                        prompt : 'Your password must be at least 4 characters long'
                     }
                 ]
             }
