@@ -87,10 +87,10 @@ class evaluation
 
     public function getCommentsWithSpace(){
         $query = getDbConnection()->prepare(
-            "SELECT ac.comment FROM survey_site.survey s, survey_site.assigned_comment ac, survey_user_group sug
-                WHERE ac.title_short = s.title_short
-                AND s.title_short = sug.title_short               
-                AND s.title_short = ?
+            "SELECT ac.comment FROM survey_site.assigned_comment ac, survey_site.survey_user_group sug, survey_site.survey_user su
+                WHERE ac.matricule_number = su.matricule_number
+                AND su.course_short = sug.course_short               
+                AND ac.title_short = ?
                 AND sug.course_short = ?                 
                 "
         );
@@ -103,7 +103,7 @@ class evaluation
         }
         $commentsWithSpace="";
         foreach ($comments as $comment){
-            $commentsWithSpace+=$comment+" ";
+            $commentsWithSpace= $commentsWithSpace.$comment.' ';
         }
         return $commentsWithSpace;
     }
