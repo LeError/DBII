@@ -29,4 +29,25 @@
         $query->execute();
         $query->close();
     }
+
+/**
+ * Get all survey records of a user
+ * @author Malik Press
+ * @param $username identifier of user
+ * @return array
+ */
+    function getSurveyRecords($username) {
+        $query = getDbConnection()->prepare(
+            "SELECT title_short FROM survey_site.survey s WHERE s.username = ?;"
+        );
+        $query->bind_param("s",$username);
+        $query->execute();
+        $query->bind_result($title_short);
+        $result = array();
+        while ($query->fetch()) {
+            $result[] = $title_short;
+        };
+        $query->close();
+        return $result;
+    }
 ?>
