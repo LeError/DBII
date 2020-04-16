@@ -38,7 +38,6 @@ $assignedSurveys=getAssignedSurveys($username);
         </table>
     </form>
     <?php
-
     if(isset($_POST['createSelectCourse'])){
 
 
@@ -48,7 +47,6 @@ $assignedSurveys=getAssignedSurveys($username);
         $assignedSurveyCourses= getAssignedSurveyCourses($assignedSurveyName);
         createSelectCourse($assignedSurveyCourses);
     }
-
     function createSelectCourse($assignedSurveyCourses){
 
         echo "
@@ -83,7 +81,6 @@ $assignedSurveys=getAssignedSurveys($username);
         showResults($_SESSION["assignedSurveyName"],$selectedCourse);
     }
     function showResults($assignedSurveyName,$selectedCourse){
-//getTitleShort($assignedSurveyName)
         $evaluationInstance = new evaluation(getTitleShort($assignedSurveyName),$selectedCourse);
         $evaluationInstance->createResultsArray();
         $results = $evaluationInstance->getResults();
@@ -91,33 +88,38 @@ $assignedSurveys=getAssignedSurveys($username);
         $comments = $evaluationInstance->getComments();
 
         echo "
-            <table width=\"100%\" border=\"0\"  cellspacing=\"10px\">
+        <table width=\"100%\" border=\"0\"  cellspacing=\"10px\">
         <tr>
             <th align=\"left\" colspan=\"2\">Presentation of results</th>
         </tr>
         <tr>
-            <td>Question</td>
-            <td>Average</td>
-            <td>Minimum</td>
-            <td>Maximum</td>
-            <td>Standard deviation</td>
+            <td style=\"font-weight:bold\">Question</td>
+            <td style=\"font-weight:bold\">Average</td>
+            <td style=\"font-weight:bold\">Minimum</td>
+            <td style=\"font-weight:bold\">Maximum</td>
+            <td style=\"font-weight:bold\">Standard deviation</td>
         </tr>";
 
         for ($i=0; $i<count($results); $i++){
                 echo "
          <tr>
-            <td>$results[$i][0]</td>
-            <td>$results[$i][1]</td>
-            <td>$results[$i][2]</td>
-            <td>$results[$i][3]</td>
-            <td>$results[$i][4]</td>
+            <td>".
+            $results[$i][0]."</td>
+            <td>".$results[$i][1]."</td>
+            <td>".$results[$i][2]."</td>
+            <td>".$results[$i][3]."</td>
+            <td>".$results[$i][4]."</td>
         </tr>";
         }
-        echo "<tr>";
+        echo "
+        <table width=\"100%\" border=\"0\"  cellspacing=\"10px\">
+         <tr>
+            <th align=\"left\" colspan=\"2\">Comments</th>
+        <tr>";
         for ($j=0; $j<count($comments); $j++) {
-            echo "<td>$comments[$j]</td>";
+            echo "<tr><td>$comments[$j]</td></tr>";
         }
-        echo "</tr>
+        echo "
         </table>";
     }
     ?>

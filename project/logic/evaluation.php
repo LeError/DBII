@@ -55,13 +55,15 @@ class evaluation
             while($query->fetch()){
                 $values[] = $value;
             }
-            $results[$row]=array();
-            $results[$row][0] = $question;
-            $results[$row][1] = (array_sum($values))/count($values);
-            $results[$row][2] = min($values);
-            $results[$row][3] = max($values);
-            $results[$row][4] = self::calculateStandardDeviation($values, $results[$row][1]);
-            $row++;
+            if(count($values)!=0) {
+                $results[$row] = array();
+                $results[$row][0] = $question;
+                $results[$row][1] = (array_sum($values)) / count($values);
+                $results[$row][2] = min($values);
+                $results[$row][3] = max($values);
+                $results[$row][4] = self::calculateStandardDeviation($values, $results[$row][1]);
+                $row++;
+            }
         }
         $this->results = $results;
     }
