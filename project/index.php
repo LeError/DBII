@@ -14,11 +14,13 @@ define("NAV_LBL_TITLE", "DHBW - Survey Site");
 define("NAV_LBL_SURVEY", "Surveys");
 define("NAV_LBL_USER_MANAGEMENT", "Survey User Management");
 define("NAV_LBL_RESULTS", "Results");
+define("NAV_LBL_LOGOUT", "Log Out");
 //Navigation links
 define("NAV_URL_TITLE", "index.php");
 define("NAV_URL_SURVEY", "index.php?view=survey");
 define("NAV_URL_USER_MANAGEMENT", "index.php?view=user_mgm");
 define("NAV_URL_RESULTS", "index.php?view=results");
+define("NAV_URL_LOGOUT", "index.php?logout");
 
 //Session Management
 session_start();
@@ -38,7 +40,7 @@ require("logic/centralFunction.req.php");
 require("logic/usermgm.req.php");
 //$_SESSION[SESSION_ROLE] = 'Admin';
 //session_destroy();
-
+require ('logic/requestHandler.req.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -59,7 +61,7 @@ require("logic/usermgm.req.php");
 <body id="root">
 
 <?php
-if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE], ROLE_ADMIN)) {
+if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE_ADMIN) {
     ?>
 
     <div class="ui tablet computer only padded grid">
@@ -69,6 +71,7 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE],
                 <a class="item" href="<?php echo NAV_URL_SURVEY ?>"><?php echo NAV_LBL_SURVEY ?></a>
                 <a class="item" href="<?php echo NAV_URL_USER_MANAGEMENT ?>"><?php echo NAV_LBL_USER_MANAGEMENT ?></a>
                 <a class="item" href="<?php echo NAV_URL_RESULTS ?>"><?php echo NAV_LBL_RESULTS ?></a>
+                <a class="item right aligned" href="<?php echo NAV_URL_LOGOUT ?>"><?php echo NAV_LBL_LOGOUT ?></a>
             </div>
         </div>
     </div>
@@ -86,6 +89,7 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE],
                 <a class="item" href="<?php echo NAV_URL_SURVEY ?>"><?php echo NAV_LBL_SURVEY ?></a>
                 <a class="item" href="<?php echo NAV_URL_USER_MANAGEMENT ?>"><?php echo NAV_LBL_USER_MANAGEMENT ?></a>
                 <a class="item" href="<?php echo NAV_URL_RESULTS ?>"><?php echo NAV_LBL_RESULTS ?></a>
+                <a class="item" href="<?php echo NAV_URL_LOGOUT ?>"><?php echo NAV_LBL_LOGOUT ?></a>
             </div>
         </div>
     </div>
@@ -97,7 +101,7 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE],
     </div>
 
     <?php
-} else if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE], ROLE_USER)) {
+} else if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE_USER) {
     ?>
 
     <?php
@@ -111,22 +115,27 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE],
                    <i><?php echo NAV_LBL_TITLE ?></i> - User
                 </div>
             </h2>
-            <form id="login" action="" method="post" class="ui large form">
+            <form id="login" action="index.php" method="POST" class="ui large form">
                 <div class="ui stacked secondary  segment">
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="user icon"></i>
-                            <input id="loginUser" type="text" name="user" placeholder="Username">
+                            <input id="loginUser" type="text" name="ul_user" placeholder="Username">
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="lock icon"></i>
-                            <input id="loginPass" type="password" name="pass" placeholder="Password">
+                            <input id="loginPass" type="password" name="ul_pass" placeholder="Password">
                         </div>
                     </div>
-                    <div class="ui fluid large teal button" onclick="callUserLogin()" style="margin-bottom: 15px">Login</div>
-                    <div class="ui fluid large teal button">Register</div>
+                    <div class="field">
+                        <div class="ui toggle checkbox">
+                            <input type="checkbox" name="ul_register">
+                            <label>Register new Account</label>
+                        </div>
+                    </div>
+                    <div class="ui fluid large teal button submit">Login</div>
                 </div>
                 <div class="ui error message"></div>
             </form>
@@ -162,7 +171,6 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && strcmp($_SESSION[SESSION_ROLE],
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script src="js/login.js"></script>
 <script src="js/navigation.js"></script>
-<script src="js/ajax.js"></script>
 </body>
 </html>
 <?php
