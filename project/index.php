@@ -126,7 +126,7 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="lock icon"></i>
-                            <input id="loginPass" type="password" name="ul_pass" placeholder="Password">
+                            <input id="loginUser" type="password" name="ul_pass" placeholder="Password">
                         </div>
                     </div>
                     <div class="field">
@@ -148,12 +148,12 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
                     <i><?php echo NAV_LBL_TITLE ?></i> - Survey User
                 </div>
             </h2>
-            <form id="login" action="" method="post" class="ui large form">
+            <form id="login_survey_user" action="" method="post" class="ui large form">
                 <div class="ui stacked secondary  segment">
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="user icon"></i>
-                            <input type="text" name="user" placeholder="Matricule Number">
+                            <input type="text" name="sul_identifier" placeholder="Matricule Number">
                         </div>
                     </div>
                     <div class="ui fluid large teal submit button">Login</div>
