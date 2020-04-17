@@ -1,8 +1,8 @@
 $(document).ready(function () {
     $('#login').form({
         fields: {
-            email: {
-                identifier: 'user',
+            ul_user: {
+                loginUser: 'ul_user',
                 rules: [
                     {
                         type: 'empty',
@@ -14,8 +14,8 @@ $(document).ready(function () {
                     }
                 ]
             },
-            password: {
-                identifier: 'pass',
+            ul_pass: {
+                identifier: 'ul_pass',
                 rules: [
                     {
                         type: 'empty',
@@ -27,6 +27,21 @@ $(document).ready(function () {
                     }
                 ]
             }
+        }
+    });
+    $('#login_survey_user').form({
+        fields: {
+            identifier: 'sul_identifier',
+            rules: [
+                {
+                    type: 'empty',
+                    prompt: 'Please enter your Matricule Number!'
+                },
+                {
+                    type   : 'length[7]',
+                    prompt : 'Your Matricule Number is 7 Characters Long!'
+                }
+            ]
         }
     });
 });
