@@ -112,7 +112,9 @@
             WHERE matricule_number = ?;"
         );
         $query->bind_param('s', $matricule_number);
-        if($query->get_result()->num_rows == 1) {
+        $query->execute();
+        $result = $query->get_result();
+        if($result->num_rows == 1) {
             $_SESSION[SESSION_USER] = $matricule_number;
             $_SESSION[SESSION_ROLE] = ROLE_USER;
         } else {
