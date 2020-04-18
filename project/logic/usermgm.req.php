@@ -19,13 +19,30 @@
      * @param $pass password that the user wants to register
      */
     function registerUser($user, $pass) {
+        $query = getDbConnection()->prepare(
+            "SELECT * FROM survey_site.user u 
+            WHERE u.username = ?;
+        ");
+        $query->bind_param('s', $user);
+        $query->execute();
+        $result = $query->get_result();
+        if($result->num_rows != 0) {
+            publishErrorNotification('Registrierung Gescheitert! Nutzername Bereits vergeben!');
+            return;
+        }
+        $query->close();
+        unset($result);
         $hashedPass = password_hash($pass, PASSWORD_DEFAULT);
         $query = getDbConnection()->prepare(
             "INSERT INTO survey_site.user (username, password) 
             VALUES (?, ?);"
         );
         $query->bind_param("ss", $user, $hashedPass);
-        $query->execute();
+        if($query->execute()) {
+            publishInfoNotification('Neuen Account "'.$user.'" erfolgreich Registriert!');
+        } else {
+            publishErrorNotification('Bei der Account Registrierung ist ein Fehler aufgetreten!');
+        }
         $query->close();
     }
 
@@ -46,6 +63,7 @@
         $result = $query->get_result();
         if($result->num_rows != 1) {
             session_unset();
+            publishErrorNotification('Account '.$user.' wurde nicht gefunden!');
             return;
         }
         $hashedPass = $result->fetch_assoc()['password'];
@@ -65,6 +83,7 @@
             $_SESSION[SESSION_ROLE] = ROLE_ADMIN;
         } else {
             session_unset();
+            publishErrorNotification('Die Kombination aus User und Passwort ist Falsch!');
         }
     }
 
@@ -119,6 +138,7 @@
             $_SESSION[SESSION_ROLE] = ROLE_USER;
         } else {
             session_unset();
+            publishErrorNotification("Kein Nutzer mit dieser Matricel Nummer wurde Gefunden!");
         }
         $query->close();
     }
