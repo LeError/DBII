@@ -1,3 +1,12 @@
+<?php
+/**
+ * view_create_survey.inc.php
+ *
+ * View create survey
+ *
+ * @author     Moritz Bürkle
+ */
+?>
 <div class="ui container center aligned">
     <form method="POST" action="index.php?view=create_survey">
         <table width="50%" border="0"  cellspacing="10px">
@@ -57,7 +66,7 @@
         }
         echo "
             <tr>
-                <td align='left' colspan='2'><input type='submit' value='Create survey' name='submitSurvey'></td>
+                <td align='left' colspan='2'><input type='submit' value='Submit survey' name='submitSurvey'></td>
             </tr>
             </table>
             </form>
@@ -66,11 +75,11 @@
     }
     function createSurvey(){
         $title= $_POST['title'];
+        // to do: check if title is already taken!
         $titleShort= $_POST['titleShort'];
         $username = "Robin";
         $questions = $_POST['question'];
         insertSurvey($username, $title, $titleShort, $questions);
     }
     ?>
-    </form>
 </div>
