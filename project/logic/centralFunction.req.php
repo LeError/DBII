@@ -100,4 +100,18 @@
             $stmt->close();
         }
     }
+
+    /**
+     * Set status of assigned survey on given matricule number and short title of a survey
+     * @author Malik Press
+     * @param $matricule_number identifier of student
+     * @param $title_short identifier of survey
+     */
+    function setAssignedStatus($matricule_number, $title_short) {
+        $query = getDbConnection() -> prepare(
+            "INSERT INTO survey_site.assigned_status($title_short,$matricule_number)VALUES (?, ?); ");
+        $query->bind_param('ss', $title_short, $matricule_number);
+        $query->execute();
+        $query->close();
+    }
 ?>
