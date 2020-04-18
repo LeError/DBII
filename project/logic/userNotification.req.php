@@ -60,7 +60,7 @@
             array_push($_SESSION[MSG_LVL_WARNING], $msg);
         } else {
             $_SESSION[MSG_LVL_WARNING] = array();
-            publishErrorNotification($msg);
+            publishWarningNotification($msg);
         }
     }
 
@@ -69,6 +69,6 @@
             array_push($_SESSION[MSG_LVL_INFO], $msg);
         } else {
             $_SESSION[MSG_LVL_INFO] = array();
-            publishErrorNotification($msg);
+            publishInfoNotification($msg);
         }
     }
