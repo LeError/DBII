@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `survey_site`.`survey`;
 CREATE TABLE `survey_site`.`survey`
 (
     `title_short` VARCHAR(10) PRIMARY KEY,
-    `title`       VARCHAR(100) NOT NULL,
+    `title`       VARCHAR(100) NOT NULL UNIQUE,
     `username`    VARCHAR(50),
     CONSTRAINT `cstr_survey_user`
         FOREIGN KEY (`username`)
