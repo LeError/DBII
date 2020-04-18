@@ -112,4 +112,57 @@
         $query->execute();
         $query->close();
     }
+
+
+/**
+ * Get assigned surveys of user
+ * DISTINCT not needed! Somehow doubled survey title entries in database -> set title to unique in table definition
+ * @author Moritz Bürkle
+ * @param $username
+ */
+    function getAssignedSurveys($username) {
+        $query = getDbConnection()->prepare(
+            "SELECT s.title FROM survey_site.survey s, survey_site.assigned a
+               WHERE s.title_short = a.title_short
+               AND s.username = ?"
+
+        );
+        $query->bind_param('s', $username);
+        $query->execute();
+        return $query->get_result();
+    }
+/**
+ * Get assigned survey course depending on assigned survey name
+ * only used if assignedSurveyName is already proofen assigned
+ * @author Moritz Bürkle
+ * @param $assignedSurveyName
+ */
+    function getAssignedSurveyCourses($assignedSurveyName){
+
+        $query = getDbConnection()->prepare(
+            "SELECT a.course_short FROM survey_site.assigned a
+                WHERE a.title_short = 
+                (SELECT s.title_short FROM survey_site.survey s 
+                WHERE s.title = ?)"
+        );
+        $query->bind_param('s', $assignedSurveyName);
+        $query->execute();
+        return $query->get_result();
+    }
+/**
+ * Get title_short for title
+ * @author Moritz Bürkle
+ * @param $title
+ */
+    function getTitleShort($title){
+        $query = getDbConnection()->prepare(
+            "SELECT s.title_short FROM survey_site.survey s
+                WHERE s.title = ? "
+        );
+        $query->bind_param('s', $title);
+        $query->execute();
+        $result = $query->get_result();
+        return $result->fetch_assoc()['title_short'];
+    }
+
 ?>
