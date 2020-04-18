@@ -30,6 +30,9 @@ define("SESSION_ID", session_id());
 require("logic/db.req.php");
 getDbConnection();
 
+//Enables Notifications / Error Handling
+require ('logic/userNotification.req.php');
+
 //Load current view
 require("logic/views.req.php");
 
@@ -38,9 +41,10 @@ require("logic/centralFunction.req.php");
 
 //Access to user management
 require("logic/usermgm.req.php");
-//$_SESSION[SESSION_ROLE] = 'Admin';
-//session_destroy();
+
+//Handles POST Requests send to the Index
 require ('logic/requestHandler.req.php');
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -93,6 +97,11 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
             </div>
         </div>
     </div>
+    <div class="container ui middle aligned center aligned grid">
+        <div width="80%" class="column">
+            <?php displayNotifications(); ?>
+        </div>
+    </div>
     <div class="ui center container">
         <?php
         //Load View from GET
@@ -108,8 +117,14 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
 } else {
     ?>
 
+    <div class="container ui middle aligned center aligned grid">
+        <div width="80%" class="column ui text left aligned">
+            <?php displayNotifications(); ?>
+        </div>
+    </div>
+
     <div class="ui middle aligned center aligned grid">
-        <div class="column" style="width: 450px; margin-top: 150px">
+        <div class="column" style="width: 450px; margin-top: 7%">
             <h2 class="ui image header">
                 <div class="content">
                    <i><?php echo NAV_LBL_TITLE ?></i> - User
