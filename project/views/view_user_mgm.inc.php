@@ -20,7 +20,7 @@ require ('./logic/survey.req.php');
         <h3 class="ui header">Kurs Übersicht</h3>
     </div>
     <div class="ui sixteen wide column">
-        <form method="post">
+        <form method="post" action="index.php?view= ">
             <?php
                 displayCourses();
             ?>

@@ -111,16 +111,13 @@
         $query = getDbConnection()->prepare('
             SELECT * FROM survey_site.survey_user_group;
         ');
-        if(!$query->execute()) {
-            publishErrorNotification("Kurse konnten nicht geladen werden!");
-            return;
-        }
+        $query->execute();
         $result = $query->get_result();
-        for ($i = 0; $i < count($data);$i++) {
+        while ($row = $result->fetch_assoc()) {
             echo '<div class="bd-survey-list-item" style="padding-bottom: 0.75vh;">
-                <button class="ui button" name="action" type="submit" value="survey'. $i .'" style="width: 50vw;">' . $data[$i] . '</button>
-                <button class="ui inverted secondary icon button" name="action" type="submit" value="edit'. $i .'"><i class="edit icon"></i></button>
-                <button class="ui inverted red icon button" name="action" type="submit" value="delete'. $i .'"><i class="trash icon"></i></button>
+                <button class="ui button" name="action" value="course_'.$row['course_short'].'" style="width: 50vw;">'.$row['course_short'].' - '.$row['course'].'</button>
+                <button class="ui inverted secondary icon button" name="action" type="submit" value="edit_'.$row['course_short'].'"><i class="edit icon"></i></button>
+                <button class="ui inverted red icon button" name="action" type="submit" value="delete_'.$row['course_short'].'"><i class="trash icon"></i></button>
             </div>';
         };
         $query->close();

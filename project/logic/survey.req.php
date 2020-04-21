@@ -38,7 +38,7 @@
  */
     function getSurveyRecords($username) {
         $query = getDbConnection()->prepare(
-            "SELECT title_short FROM survey_site.survey s WHERE s.username = ?;"
+            "SELECT title_short FROM survey_site.survey s WHERE s.username = ? "
         );
         $query->bind_param("s",$username);
         $query->execute();
