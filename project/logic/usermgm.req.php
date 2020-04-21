@@ -114,13 +114,40 @@
         $query->execute();
         $result = $query->get_result();
         while ($row = $result->fetch_assoc()) {
-            echo '<div class="bd-survey-list-item" style="padding-bottom: 0.75vh;">
-                <button class="ui button" name="action" value="course_'.$row['course_short'].'" style="width: 50vw;">'.$row['course_short'].' - '.$row['course'].'</button>
-                <button class="ui inverted secondary icon button" name="action" type="submit" value="edit_'.$row['course_short'].'"><i class="edit icon"></i></button>
-                <button class="ui inverted red icon button" name="action" type="submit" value="delete_'.$row['course_short'].'"><i class="trash icon"></i></button>
-            </div>';
+            echo '
+                <form method="post" action="index.php?view=user_mgm&course='.$row['course_short'].'">
+                    <div class="bd-survey-list-item" style="padding-bottom: 0.75vh;">
+                        <button class="ui button" name="course" value="course" type="submit" style="width: 50vw;">'.$row['course_short'].' - '.$row['course'].'</button>
+                        <button class="ui inverted secondary icon button" name="edit" type="submit" value="edit"><i class="edit icon"></i></button>
+                        <button class="ui inverted red icon button" name="delete" type="submit" value="delete"><i class="trash icon"></i></button>
+                    </div>
+                </form>
+            ';
         };
         $query->close();
+    }
+
+    /**
+     * @param $course
+     */
+    function displayCourse($course) {
+
+    }
+
+    /**
+     * deletes a course
+     * @author Robin Herder
+     * @param $course
+     * @return bool
+     */
+    function deleteCourse($course) {
+        $query = getDbConnection()->prepare('
+            DELETE FROM survey_site.survey_user_group 
+            WHERE course_short = ?;
+        ');
+        $query->bind_param('s', $course);
+        $query->execute() or publishErrorNotification('Kann Kurs nicht Löschen');
+        return true;
     }
 
     /**
@@ -138,6 +165,10 @@
         $query->bind_param('sss', $matricule_number, $username, $course_short);
         $query->execute();
         $query->close();
+    }
+
+    function displayEditDialogue() {
+
     }
 
     /**

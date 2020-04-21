@@ -20,11 +20,18 @@ require ('./logic/survey.req.php');
         <h3 class="ui header">Kurs Übersicht</h3>
     </div>
     <div class="ui sixteen wide column">
-        <form method="post" action="index.php?view= ">
-            <?php
+        <?php
+            if(!isset($_GET['course'])) {
                 displayCourses();
-            ?>
-        </form>
+            } else if(isset($_POST['course'])) {
+                displayCourse($_GET['course']);
+            } else if(isset($_POST['edit'])) {
+                displayEditDialogue($_GET['course']);
+            } else if(isset($_POST['delete'])) {
+                deleteCourse($_GET['course']) or publishErrorNotification('Unable to delete course');
+                header('location: index.php?view=user_mgm');
+            }
+        ?>
     </div>
     <br>
 </div>
