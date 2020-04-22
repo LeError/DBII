@@ -13,9 +13,9 @@ function copySurvey($titleShort, $title, $username)
     $query = getDbConnection()->prepare(
         "INSERT INTO survey_site.survey (title_short, title, username) VALUES (?, ?, ?)");
     $query->bind_param('sss', $titleShort, $title, $username);
-    if ($query->execute()) {
-    } else {
-        return $error== true;
+    $query->execute();
+    if (!$query->execute()){
+    return $error== true;
     }
     $query->close();
 }
