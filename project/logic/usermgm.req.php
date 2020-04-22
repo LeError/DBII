@@ -131,7 +131,11 @@
      * @param $course
      */
     function displayCourse($course) {
-
+        $query = getDbConnection()->prepare('
+            SELECT * FROM survey_site.survey_user_group;
+        ');
+        $query->execute();
+        $result = $query->get_result();
     }
 
     /**
@@ -165,10 +169,6 @@
         $query->bind_param('sss', $matricule_number, $username, $course_short);
         $query->execute();
         $query->close();
-    }
-
-    function displayEditDialogue() {
-
     }
 
     /**
