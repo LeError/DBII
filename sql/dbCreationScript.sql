@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS `survey_site`.`user`;
 CREATE TABLE `survey_site`.`user`
 (
     `username` VARCHAR(50) PRIMARY KEY,
-    `password` VARCHAR(50) NOT NULL
+    `password` VARCHAR(60) NOT NULL
 );
 
 -- -----------------------------------------------------

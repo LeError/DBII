@@ -18,6 +18,7 @@
         $query->bind_param('ss', $title_short, $matricule_number);
         $query->execute();
         $rows = mysqli_num_rows($query->get_result());
+        $query->close();
         if($rows > 0) {
             return true;
         }
@@ -27,9 +28,9 @@
     /**
      * Persists a comment of a user given on a survey
      * @author Robin Herder
-     * @param $matricule_number
-     * @param $title_short
-     * @param $comment
+     * @param $matricule_number identifier of student
+     * @param $title_short identifier of survey
+     * @param $comment comment text
      */
     function insertSurveyComment($matricule_number, $title_short, $comment) {
         $query = getDbConnection()->prepare(
@@ -38,6 +39,7 @@
         );
         $query->bind_param('sss', $title_short, $matricule_number, $comment);
         $query->execute();
+        $query->close();
     }
 
 
