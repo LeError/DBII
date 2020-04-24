@@ -11,8 +11,8 @@ require ('./logic/survey.req.php');
 <div class="ui grid">
     <div class="ui sixteen wide column right aligned">
         <a href="index.php?view=create_survey">
-            <form method="post">
-                <button class="ui positive labeled icon button" name="action" type="submit" value="new" style="margin-top: 3vh"><i class="plus icon"></i>Neuen Kurs Anlegen</button>
+            <form method="post" action="index.php?view=new_course">
+                <button class="ui positive labeled icon button" type="submit" style="margin-top: 3vh"><i class="plus icon"></i>Neuen Kurs Anlegen</button>
             </form>
         </a>
     </div>
@@ -20,18 +20,20 @@ require ('./logic/survey.req.php');
         <h3 class="ui header">Kurs Übersicht</h3>
     </div>
     <div class="ui sixteen wide column">
+        <div class="ui middle aligned animated list">
         <?php
             if(!isset($_GET['course'])) {
                 displayCourses();
             } else if(isset($_POST['course'])) {
                 displayCourse($_GET['course']);
             } else if(isset($_POST['edit'])) {
-                displayEditDialogue($_GET['course']);
+                header('Location: index.php?view=edit_course&course='.$_GET['course']);
             } else if(isset($_POST['delete'])) {
-                deleteCourse($_GET['course']) or publishErrorNotification('Unable to delete course');
+                deleteCourse($_GET['course']) or publishErrorNotification('Unable to delete course)');
                 header('location: index.php?view=user_mgm');
             }
         ?>
+        </div>
     </div>
     <br>
 </div>

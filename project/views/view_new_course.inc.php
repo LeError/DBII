@@ -12,7 +12,7 @@
 <div class="ui one column grid center aligned" style="margin-top: 30px">
     <div class="column">
         <div class="ui raised segment left aligned">
-            <div class="ui red ribbon label">Create</div>
+            <div class="ui blue ribbon label">Create</div>
             <span>Neuen Kurs anlegen</span>
             <form id="create_course" action="index.php?view=new_course" method="post" class="ui large form" style="margin: 25px 10px 10px;">
                 <div class="field">
