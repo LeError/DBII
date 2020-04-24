@@ -95,12 +95,30 @@
      */
     function registerCourse($course_short, $course) {
         $query = getDbConnection()->prepare(
+            "SELECT * FROM survey_site.survey_user_group g 
+            WHERE g.course_short = ?"
+        );
+        $query->bind_param('s', $course_short);
+        $query->execute();
+        $result = $query->get_result();
+        if($result->num_rows != 0) {
+            echo '<h1>Hier</h1>';
+            publishErrorNotification('Kurskürzel bereits vergeben. Kurs wurde nicht erstellt!');
+            return;
+        }
+        $query->close();
+        $query = getDbConnection()->prepare(
             "INSERT INTO survey_user_group (course, course_short) 
             VALUES (?, ?);"
         );
-        $query->bind_param('ss', $matricule_number, $username);
-        $query->execute();
+        $query->bind_param('ss', $course_short, $course);
+        if(!$query->execute()) {
+            publishErrorNotification("Ein unerwarteter Fehler ist Aufgetreten. Kurs wurde nicht Erstellt!");
+            $query->close();
+            return;
+        }
         $query->close();
+        publishInfoNotification('Kurs wurde erfolgreich erstelt');
     }
 
     /**
@@ -128,14 +146,42 @@
     }
 
     /**
+     * Displays Members of a Course
+     * @author Robin Herder
      * @param $course
      */
     function displayCourse($course) {
         $query = getDbConnection()->prepare('
-            SELECT * FROM survey_site.survey_user_group;
+            SELECT * FROM survey_site.survey_user u 
+            WHERE u.course_short = ?;
         ');
+        $query->bind_param('s', $course);
         $query->execute();
         $result = $query->get_result();
+        if($result->num_rows == 0) {
+            echo '
+                <div class="item">
+                    <div class="content">
+                         <div class="header">Leer</div>
+                         <div class="description">Es wurden Keine Nutzer im Kurs gefunden oder Kurs unbekannt</div>
+                    </div>
+                    <br/>
+                </div>
+            ';
+        }
+        while($row = $result->fetch_assoc()) {
+            echo '
+                <div class="item">
+                    <div class="content">
+                         <div class="header">'.$row['matricule_number'].'</div>
+                         <div class="description">'.$row['username'].'</div>
+                    </div>
+                    <hr/>
+                    <br/>
+                </div>
+            ';
+        }
+        $query->close();
     }
 
     /**
@@ -162,12 +208,19 @@
      * @param $course_short
      */
     function registerSurveyUser($matricule_number, $username, $course_short) {
+        $query = getDbConnection()->prepare('
+            
+        ');
         $query = getDbConnection()->prepare(
             "INSERT INTO survey_user (matricule_number, username, course_short) 
             VALUES (?, ?, ?);"
         );
         $query->bind_param('sss', $matricule_number, $username, $course_short);
-        $query->execute();
+        if($query->execute()) {
+            publishInfoNotification('Nutzer wurde angelegt');
+        } else {
+            publishErrorNotification('Nutzer konnte nicht erstellt werden');
+        }
         $query->close();
     }
 
@@ -194,8 +247,34 @@
         $query->close();
     }
 
+    function deleteSurveyUser($matricule_number) {
+        $query = getDbConnection()->prepare('
+            SELECT * FROM survey_site.survey_user u 
+            WHERE u.matricule_number = ?;
+        ');
+        $query->bind_param('s', $matricule_number);
+        $query->execute();
+        $result = $query->get_result();
+        if($result->num_rows != 1) {
+            publishErrorNotification('Kann Nutzer nich Löschen da er nicht existiert!');
+            return;
+        }
+        $query->close();
+        $query = getDbConnection()->prepare('
+            DELETE FROM survey_site.survey_user u 
+            WHERE u.matricule_number = ?; 
+        ');
+        $query->bind_param('s', $matricule_number);
+        if($query->execute()) {
+            publishInfoNotification('Der Nutzer wurde Erfolgreich gel&ouml;scht');
+        } else {
+
+        }
+    }
+
     /**
      * Function to return name of survey_user
+     * @author Robin Herder
      * @param $matricule_number identifier of survey_user
      * @return username
      */
@@ -221,6 +300,25 @@
     function logout() {
         session_destroy();
         header('Location: index.php');
+    }
+
+    function checkCourseExists($course) {
+        $query = getDbConnection()->prepare('
+            SELECT * FROM survey_site.survey_user_group g
+            WHERE g.course_short = ?;
+        ');
+        $query->bind_param('s', $course);
+        if($query->execute()) {
+            $result = $query->get_result();
+            if($result->num_rows != 1) {
+                $msg[0] = 'Der übergebene Kurs wurde nicht gefunden! Bitte zur übersicht zurückkehren ---> <a href="index.php?view=user_mgm">Übersicht</a>';
+                echoNotificationEntries(MSG_LVL_ERROR, $msg);
+            }
+        } else {
+            $msg[0] = 'Beim abfragen des Kurses ist ein Fehler aufgetreten!';
+            echoNotificationEntries(MSG_LVL_ERROR, $msg);
+        }
+        $query->close();
     }
 
 ?>
