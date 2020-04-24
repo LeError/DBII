@@ -186,6 +186,7 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script src="js/login.js"></script>
 <script src="js/navigation.js"></script>
+<script src="js/create_course.js"></script>
 </body>
 </html>
 <?php
