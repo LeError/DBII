@@ -23,6 +23,14 @@
         registerCourse($_POST['c_course_short'], $_POST['c_course']);
     }
 
+    if(isset($_POST['c_course_short']) && isset($_POST['c_mat_nr']) && isset($_POST['c_name'])) {
+        registerSurveyUser($_POST['c_mat_nr'], $_POST['c_name'], $_POST['c_course_short']);
+    }
+
+    if(isset($_POST['d_student'])) {
+        deleteSurveyUser($_POST['d_student']);
+    }
+
     //Logout / end Sessions  (for all user types)
     if(isset($_GET['logout'])) {
         logout();
