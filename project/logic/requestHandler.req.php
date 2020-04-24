@@ -19,6 +19,10 @@
         loginSurveyUser($_POST['sul_identifier']);
     }
 
+    if(isset($_POST['c_course_short']) && isset($_POST['c_course'])) {
+        registerCourse($_POST['c_course_short'], $_POST['c_course']);
+    }
+
     //Logout / end Sessions  (for all user types)
     if(isset($_GET['logout'])) {
         logout();
