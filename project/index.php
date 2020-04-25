@@ -187,6 +187,7 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
 <script src="js/login.js"></script>
 <script src="js/navigation.js"></script>
 <script src="js/create_course.js"></script>
+<script src="js/edit_course.js"></script>
 </body>
 </html>
 <?php

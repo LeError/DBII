@@ -18,7 +18,7 @@
         <div class="ui raised segment left aligned">
             <div class="ui blue ribbon label">Create</div>
             <span>Neuen Studenten Anlegen</span>
-            <form id="create_course" action="index.php?view=edit_course&course=<?php if(isset($_GET['course'])) { echo $_GET['course']; }?>" method="post" class="ui large form" style="margin: 25px 10px 10px;">
+            <form id="create_survey_user" action="index.php?view=edit_course&course=<?php if(isset($_GET['course'])) { echo $_GET['course']; }?>" method="post" class="ui large form" style="margin: 25px 10px 10px;">
                 <div class="field">
                     <div class="field">
                         <div class="ui labeled input disabled">
@@ -54,7 +54,7 @@
         <div class="ui raised segment left aligned">
             <div class="ui red ribbon label">Delete</div>
             <span>Einen Nutzer Löschen</span>
-            <form id="create_course" action="index.php?view=edit_course&course=<?php if(isset($_GET['course'])) { echo $_GET['course']; }?>" method="post" class="ui large form" style="margin: 25px 10px 10px;">
+            <form id="delete_survey_user" action="index.php?view=edit_course&course=<?php if(isset($_GET['course'])) { echo $_GET['course']; }?>" method="post" class="ui large form" style="margin: 25px 10px 10px;">
                 <div class="field">
                     <div class="ui labeled input">
                         <div class="ui label">

@@ -209,8 +209,17 @@
      */
     function registerSurveyUser($matricule_number, $username, $course_short) {
         $query = getDbConnection()->prepare('
-            
+            SELECT * FROM survey_site.survey_user u 
+            WHERE u.matricule_number = ?;
         ');
+        $query->bind_param('s', $matricule_number);
+        $query->execute();
+        $result = $query->get_result();
+        if($result->num_rows != 0) {
+            publishErrorNotification('Nutzer mit dieser Matrikelnummer existiert bereits');
+            return;
+        }
+        $query->close();
         $query = getDbConnection()->prepare(
             "INSERT INTO survey_user (matricule_number, username, course_short) 
             VALUES (?, ?, ?);"
@@ -242,7 +251,7 @@
             $_SESSION[SESSION_ROLE] = ROLE_USER;
         } else {
             session_unset();
-            publishErrorNotification("Kein Nutzer mit dieser Matricel Nummer wurde Gefunden!");
+            publishErrorNotification("Kein Nutzer mit dieser Matrikel Nummer wurde Gefunden!");
         }
         $query->close();
     }
