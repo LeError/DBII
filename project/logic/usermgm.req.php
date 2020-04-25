@@ -261,8 +261,8 @@
         }
         $query->close();
         $query = getDbConnection()->prepare('
-            DELETE FROM survey_site.survey_user u 
-            WHERE u.matricule_number = ?; 
+            DELETE FROM survey_site.survey_user 
+            WHERE matricule_number = ?; 
         ');
         $query->bind_param('s', $matricule_number);
         if($query->execute()) {
