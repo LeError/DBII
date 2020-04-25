@@ -11,7 +11,7 @@ require ('./logic/survey.req.php');
 <div class="ui grid">
        <div class="ui sixteen wide column right aligned">
            <a href="index.php?view=create_survey">
-                <form method="post">
+                <form method="post" action="index.php?view=create_survey">
                      <button class="ui positive labeled icon button" name="action" type="submit" value="new" style="margin-top: 3vh"><i class="plus icon"></i>Neue Umfrage erstellen</button>
                 </form>
            </a>
