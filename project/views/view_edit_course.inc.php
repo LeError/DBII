@@ -21,11 +21,11 @@
             <form id="create_course" action="index.php?view=edit_course&course=<?php if(isset($_GET['course'])) { echo $_GET['course']; }?>" method="post" class="ui large form" style="margin: 25px 10px 10px;">
                 <div class="field">
                     <div class="field">
-                        <div class="ui labeled input">
+                        <div class="ui labeled input disabled">
                             <div class="ui label">
                                 K&uuml;rzel
                             </div>
-                            <input value="<?php echo $_GET['course']?>" maxLength="8" type="text" name="c_course_short" placeholder="WWIBE118" disabled>
+                            <input value="<?php echo $_GET['course']?>" maxLength="8" type="text" name="c_course_short" placeholder="WWIBE118">
                         </div>
                     </div>
                 </div>
