@@ -268,7 +268,7 @@
         if($query->execute()) {
             publishInfoNotification('Der Nutzer wurde Erfolgreich gel&ouml;scht');
         } else {
-
+            publishErrorNotification('Der Nutzer konnte nicht angelegt werden!');
         }
     }
 

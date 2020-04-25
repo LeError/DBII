@@ -71,7 +71,7 @@
                                 if($query->execute()) {
                                     $result = $query->get_result();
                                     while($row = $result->fetch_assoc()) {
-                                        echo '<option value="'.$row['matricule_number'].'">'.$row['username'].' ('.$row['matricule_number'].')'.'</option>';
+                                        echo '<option value="'.$row['matricule_number'].'">'.$row['username'].' ('.$row['matricule_number'].')</option>';
                                     }
                                 }
                             ?>
