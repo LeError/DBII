@@ -293,11 +293,14 @@
             WHERE u.matricule_number = ?;"
         );
         $query->bind_param('s', $matricule_number);
-        $query->execute();
-        if($query->get_result()->num_rows != 1) {
-            return;
+        if(!$query->execute()) {
+            $return = '';
         }
-        $username = $query->get_result()->fetch_array()['username'];
+        $result = $query->get_result();
+        if($result->num_rows != 1) {
+            return '';
+        }
+        $username = $result->fetch_array()['username'];
         $query->close();
         return $username;
     }

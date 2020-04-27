@@ -24,7 +24,6 @@ define("NAV_URL_LOGOUT", "index.php?logout");
 
 //Session Management
 session_start();
-define("SESSION_ID", session_id());
 
 //Establish database connection
 require("logic/db.req.php");
@@ -33,14 +32,14 @@ getDbConnection();
 //Enables Notifications / Error Handling
 require ('logic/userNotification.req.php');
 
-//Load current view
-require("logic/views.req.php");
-
 //Access to central function
 require("logic/centralFunction.req.php");
 
 //Access to user management
 require("logic/usermgm.req.php");
+
+//Load current view
+require("logic/views.req.php");
 
 //Handles POST Requests send to the Index
 require ('logic/requestHandler.req.php');
@@ -112,7 +111,41 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
     <?php
 } else if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE_USER) {
     ?>
-
+    <div class="ui tablet computer only padded grid">
+        <div class="ui borderless fluid huge inverted menu">
+            <div class="ui container">
+                <a class="header item" href="<?php echo NAV_URL_TITLE ?>"><?php echo NAV_LBL_TITLE ?></a>
+                <div class="item center aligned"><?php if(isset($_SESSION[SESSION_USER])) { echo 'Hi '.getSurveyUsername($_SESSION[SESSION_USER]); }?></div>
+                <a class="item right aligned" href="<?php echo NAV_URL_LOGOUT ?>"><?php echo NAV_LBL_LOGOUT ?></a>
+            </div>
+        </div>
+    </div>
+    <div class="ui mobile only padded grid">
+        <div class="ui borderless fluid huge inverted menu">
+            <a class="header item" href="<?php echo NAV_URL_TITLE ?>"><?php echo NAV_LBL_TITLE ?></a>
+            <div class="right menu">
+                <div class="item">
+                    <button class="ui icon toggle basic inverted button">
+                        <i class="content icon"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="ui vertical borderless fluid inverted menu">
+                <a class="item" href="<?php echo NAV_URL_LOGOUT ?>"><?php echo NAV_LBL_LOGOUT ?></a>
+            </div>
+        </div>
+    </div>
+    <div class="container ui middle aligned center aligned grid">
+        <div width="80%" class="column">
+            <?php displayNotifications(); ?>
+        </div>
+    </div>
+    <div class="ui center container">
+        <?php
+        //Load View from GET
+        require(loadViews());
+        ?>
+    </div>
     <?php
 } else {
     ?>
