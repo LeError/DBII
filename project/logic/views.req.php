@@ -20,7 +20,11 @@
      * @return mixed|string|string[]|null path to view
      */
     function loadViews() {
-        $view = "survey";
+        if(array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE_ADMIN) {
+            $view = "survey";
+        } elseif (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE_USER) {
+            $view = "assigned_surveys";
+        }
         if(!empty($_GET['view'])) {
             $view = $_GET['view'];
         }
