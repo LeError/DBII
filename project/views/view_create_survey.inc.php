@@ -77,9 +77,9 @@
         $title= $_POST['title'];
         // to do: check if title is already taken!
         $titleShort= $_POST['titleShort'];
-        $username = "Robin";
         $questions = $_POST['question'];
-        insertSurvey($username, $title, $titleShort, $questions);
+        insertSurvey($_SESSION["user"], $title, $titleShort, $questions);
+
     }
     ?>
 </div>

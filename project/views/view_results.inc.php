@@ -8,8 +8,7 @@
  */
 
 require('logic/evaluation.php');
-$username="Leoni";
-$assignedSurveys=getAssignedSurveys($username);
+$assignedSurveys=getAssignedSurveys($_SESSION["user"]);
 ?>
 <div class="ui container">
     <br>
