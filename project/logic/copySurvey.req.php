@@ -17,20 +17,22 @@ function copyQuestion($titleShortOld, $titleShort)
     while ($query->fetch()) {
         $result[] = $question;
     }
-    $er_question=true;
+    $er_question = true;
     for ($i = 0; $i < count($result); $i++) {
         $query = getDbConnection()->prepare("INSERT INTO survey_site.question (question, title_short) VALUES (?,?)");
         $query->bind_param("ss", $result[$i], $titleShort);
-        if(!$query->execute()){
+        if (!$query->execute()) {
             publishErrorNotification("Kopieren gescheitert!");
-            $er_question=false;
-        }}
+            $er_question = false;
+        }
+    }
     {
         if ($er_question) {
             publishInfoNotification("Der kopierte Fragebogen wurde erfolgreich gespeichert!");
         }
         $query->close();
-    }}
+    }
+}
 
 
 function deleteSurvey($titleShort, $title, $username)
@@ -39,7 +41,9 @@ function deleteSurvey($titleShort, $title, $username)
         "DELETE FROM survey_site.survey where title_short =? AND title=? AND username=?");
     $query->bind_param('sss', $titleShort, $title, $username);
     $query->execute();
-    $query->close();}
+    $query->close();
+}
+
 /**
  * @param $titleShort
  * @param $title
@@ -56,7 +60,9 @@ function copySurvey($titleShort, $title, $username, $titleShortOld)
     if (!$query->execute()) {
         publishErrorNotification("Kopieren gescheitert!");
         deleteSurvey($titleShort, $title, $username);
-    }else{copyQuestion($titleShortOld, $titleShort);}
+    } else {
+        copyQuestion($titleShortOld, $titleShort);
+    }
     $query->close();
 }
 

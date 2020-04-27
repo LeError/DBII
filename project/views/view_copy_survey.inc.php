@@ -34,8 +34,8 @@ require ('./logic/copySurvey.req.php');
 <?php
 if(isset($_POST["copySurvey"])){
     if ((($_POST['title_short']) == ""&& ($_POST['title']) == "")||(($_POST['title_short']) == ""&& ($_POST['title']) <> "")||
-        (($_POST['title_short']) <> ""&& ($_POST['title']) == ""))
-    {publishWarningNotification("Bitte alle Felder befüllen!");
+        (($_POST['title_short']) <> ""&& ($_POST['title']) == "")) {
+        publishWarningNotification("Bitte alle Felder befüllen!");
     }else{
         copySurvey($_POST["title_short"], $_POST["title"], $_SESSION[SESSION_USER], $oldSurvey);
         }
