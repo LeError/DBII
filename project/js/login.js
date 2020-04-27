@@ -2,7 +2,7 @@ $(document).ready(function () {
     $('#login').form({
         fields: {
             ul_user: {
-                loginUser: 'ul_user',
+                identifier: 'ul_user',
                 rules: [
                     {
                         type: 'empty',
