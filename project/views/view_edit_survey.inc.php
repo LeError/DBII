@@ -4,18 +4,23 @@
  * @author Leonie Rauch
  */
 
-$titleShort = "test0";
-$title = "Test 0";
 require('./logic/editSurvey.req.php');
+
+if (isset($_POST["edit"])) {
+    checkWhetherInUse($_POST["edit"]);
+    $_SESSION["titleShort"] = $_POST["edit"];
+}
+checkWhetherInUse($_SESSION["titleShort"]);
+$title = getTitle($_SESSION["titleShort"]);
 ?>
 
-    <div class="ui grid">
+    <div class="ui grid" id="test">
         <div class="ui sixteen wide column"></div>
         <div class="ui sixteen wide column">
-            <h3 class="ui header">Edit survey: <?php print($_SESSION['title']) ?></h3>
+            <h3 class="ui header">Anpassen des Fragebogens: <?php echo $_SESSION["titleShort"] ?></h3>
         </div>
 
-        <table width="50%" border="0" cellspacing="10px">
+        <table width="50%" border="0" cellspacing="10px" id="na">
             <form action="" method="post">
                 <tr>
                     <td align="left" colspan="2">Frage hinzufügen:</td>
@@ -38,7 +43,7 @@ if (isset($_POST["insertQuestion"])) {
     if (($_POST['question']) == "") {
         publishWarningNotification("Bitte alle Felder befüllen!");
     } else {
-        insertQuestion($_POST["question"], $titleShort);
+        insertQuestion($_POST["question"], $_SESSION["titleShort"]);
     }
 }
 
@@ -47,11 +52,8 @@ if (isset($_POST["insertQuestion"])) {
 showQuestions($title);
 
 /*Fragen löschen*/
-if (isset($_POST["delete"])) {
-    $id = ($_POST["delete"]);
+if (isset($_POST["deleteQ"])) {
+    $id = ($_POST["deleteQ"]);
     deleteQuestion($id);
+
 }
-
-
-
-

@@ -2,6 +2,21 @@
 
 
 /**
+ * @param $titleShort
+ * @param $title
+ * @param $username
+ * @author Leonie Rauch
+ */
+function deleteSurvey($titleShort, $title, $username)
+{
+    $query = getDbConnection()->prepare(
+        "DELETE FROM survey_site.survey where title_short =? AND title=? AND username=?");
+    $query->bind_param('sss', $titleShort, $title, $username);
+    $query->execute();
+    $query->close();
+}
+
+/**
  * @param $titleShortOld
  * @param $titleShort
  * @author Leonie Rauch
@@ -17,6 +32,7 @@ function copyQuestion($titleShortOld, $titleShort)
     while ($query->fetch()) {
         $result[] = $question;
     }
+
     $er_question = true;
     for ($i = 0; $i < count($result); $i++) {
         $query = getDbConnection()->prepare("INSERT INTO survey_site.question (question, title_short) VALUES (?,?)");
@@ -34,22 +50,11 @@ function copyQuestion($titleShortOld, $titleShort)
     }
 }
 
-
-function deleteSurvey($titleShort, $title, $username)
-{
-    $query = getDbConnection()->prepare(
-        "DELETE FROM survey_site.survey where title_short =? AND title=? AND username=?");
-    $query->bind_param('sss', $titleShort, $title, $username);
-    $query->execute();
-    $query->close();
-}
-
 /**
  * @param $titleShort
  * @param $title
  * @param $username
  * @param $titleShortOld
- * @return void
  * @author Leonie Rauch
  */
 function copySurvey($titleShort, $title, $username, $titleShortOld)
@@ -58,12 +63,12 @@ function copySurvey($titleShort, $title, $username, $titleShortOld)
         "INSERT INTO survey_site.survey (title_short, title, username) VALUES (?, ?, ?)");
     $query->bind_param('sss', $titleShort, $title, $username);
     if (!$query->execute()) {
-        publishErrorNotification("Kopieren gescheitert!");
         deleteSurvey($titleShort, $title, $username);
+        publishErrorNotification("Kopieren gescheitert!");
+
     } else {
         copyQuestion($titleShortOld, $titleShort);
     }
     $query->close();
 }
-
 

@@ -32,11 +32,11 @@ function showQuestions($title)
             echo "<tr> 
                    <td> $id </td> 
                    <td> $question </td>
-                   <td> <button class=\"ui button\" name=\"edit\" type=\"submit\" value = $id style=\"width: 7vw;\"><i class=\"edit icon\"></i></button> </td>
-                    <td> <button class=\"ui button\" name=\"delete\" type=\"submit\" value= $id style=\"width: 7vw;\"><i class=\"trash icon\"></i></button></td>
+                   <td> <button class=\"ui button\" name=\"editQ\" type=\"submit\" value = $id style=\"width: 7vw;\"><i class=\"edit icon\"></i></button> </td>
+                    <td> <button class=\"ui button\" name=\"deleteQ\" type=\"submit\" value= $id style=\"width: 7vw;\"><i class=\"trash icon\"></i></button></td>
                     </tr>";
         endforeach;
-        echo "</tform>";
+        echo "</form>";
         echo "</table>";
     }
 }
@@ -66,7 +66,7 @@ function deleteQuestion($id)
 {
     $sql = "DELETE FROM survey_site.question where id = ?;";
     $query = getDbConnection()->prepare($sql);
-    $query->bind_param('s', $id);
+    $query->bind_param('i', $id);
     if (!$query->execute()) {
         publishErrorNotification("Löschen der Frage" . $id . " ist gescheitert!");
     } else {
@@ -74,4 +74,30 @@ function deleteQuestion($id)
     }
 }
 
+function getTitle($titleShort)
+{
+    $query = getDbConnection()->prepare("SELECT title  FROM survey_site.survey  where title_short= ?");
+    $query->bind_param('s', $titleShort);
+    $query->execute();
+    $query->bind_result($title);
+    $query->fetch();
+    return $result = $title;
+}
 
+function checkWhetherInUse($titleShort)
+{
+    $query = getDbConnection()->prepare(
+        "SELECT a.id FROM survey_site.answer a, 
+survey_site.question q, survey_site.survey s WHERE q.title_short = ? AND q.id = a.id");
+    $query->bind_param('s', $titleShort);
+    $query->execute();
+    $result = $query->get_result();
+    if ($result->num_rows != 0) {
+        publishErrorNotification("Fragebogen" . $titleShort . " kann nicht bearbeitet werden, da er bereits von Studenten genutzt wird!");
+        echo "<form method ='post' action ='index.php?view_survey'<input type=\"hidden\" name=\"submit\"></form>";
+    }
+
+
+}
+
+?>
