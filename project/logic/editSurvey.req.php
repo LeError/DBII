@@ -36,6 +36,7 @@ function showQuestions($title)
                     <td> <button class=\"ui button\" name=\"deleteQ\" type=\"submit\" value= $id style=\"width: 7vw;\"><i class=\"trash icon\"></i></button></td>
                     </tr>";
         endforeach;
+        $query->close();
         echo "</form>";
         echo "</table>";
     }
@@ -71,10 +72,15 @@ function deleteQuestion($id)
         publishErrorNotification("Löschen der Frage" . $id . " ist gescheitert!");
     } else {
         publishInfoNotification("Die Frage " . $id . " wurde gelöscht!");
-    }
+    }$query->close();
 }
 
-function getTitle($titleShort)
+        /**
+         * @param $titleShort
+         * @return mixed
+         * @author Leonie Rauch
+         */
+        function getTitle($titleShort)
 {
     $query = getDbConnection()->prepare("SELECT title  FROM survey_site.survey  where title_short= ?");
     $query->bind_param('s', $titleShort);
@@ -82,9 +88,14 @@ function getTitle($titleShort)
     $query->bind_result($title);
     $query->fetch();
     return $result = $title;
+    $query->close();
 }
 
-function checkWhetherInUse($titleShort)
+        /**
+         * @param $titleShort
+         * @author Leonie Rauch
+         */
+        function checkWhetherInUse($titleShort)
 {
     $query = getDbConnection()->prepare(
         "SELECT a.id FROM survey_site.answer a, 
@@ -94,8 +105,8 @@ survey_site.question q, survey_site.survey s WHERE q.title_short = ? AND q.id = 
     $result = $query->get_result();
     if ($result->num_rows != 0) {
         publishErrorNotification("Fragebogen" . $titleShort . " kann nicht bearbeitet werden, da er bereits von Studenten genutzt wird!");
-        echo "<form method ='post' action ='index.php?view_survey'<input type=\"hidden\" name=\"submit\"></form>";
-    }
+        header('Location: index.php?view=survey/');
+    }$query->close();
 
 
 }

@@ -53,7 +53,6 @@ showQuestions($title);
 
 /*Fragen löschen*/
 if (isset($_POST["deleteQ"])) {
-    $id = ($_POST["deleteQ"]);
-    deleteQuestion($id);
+    deleteQuestion(($_POST["deleteQ"]));
 
 }
