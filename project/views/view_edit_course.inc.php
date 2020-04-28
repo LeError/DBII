@@ -45,7 +45,7 @@
                         <input maxLength="50" type="text" name="c_name" placeholder="Steve Jobs">
                     </div>
                 </div>
-                <button class="ui fluid large teal button submit" type="submit">Erstellen</button>
+                <button class="ui fluid large blue button submit" type="submit">Erstellen</button>
                 <div class="ui error message"></div>
             </form>
         </div>
