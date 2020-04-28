@@ -21,6 +21,8 @@ define("NAV_URL_SURVEY", "index.php?view=survey");
 define("NAV_URL_USER_MANAGEMENT", "index.php?view=user_mgm");
 define("NAV_URL_RESULTS", "index.php?view=results");
 define("NAV_URL_LOGOUT", "index.php?logout");
+//Check if only index is accessed
+define("REQ", 'index');
 
 //Session Management
 session_start();
@@ -41,9 +43,11 @@ require("logic/usermgm.req.php");
 //Load current view
 require("logic/views.req.php");
 
+//Security logic for the page
+require ('logic/security.req.php');
+
 //Handles POST Requests send to the Index
 require ('logic/requestHandler.req.php');
-
 ?>
 <!DOCTYPE html>
 <html>
