@@ -1,5 +1,9 @@
 <?php
 
+    //Prevent user form accessing file directly
+    require_once('security.req.php');
+    checkDocument();
+
     /**
      * Checks if a user is assigned to a survey / is allowed to access
      * @author Robin Herder

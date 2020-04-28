@@ -21,29 +21,30 @@ define("NAV_URL_SURVEY", "index.php?view=survey");
 define("NAV_URL_USER_MANAGEMENT", "index.php?view=user_mgm");
 define("NAV_URL_RESULTS", "index.php?view=results");
 define("NAV_URL_LOGOUT", "index.php?logout");
+//Check if only index is accessed
+define("REQ", 'index');
 
 //Session Management
 session_start();
 
 //Establish database connection
-require("logic/db.req.php");
+require_once("logic/db.req.php");
 getDbConnection();
 
 //Enables Notifications / Error Handling
-require ('logic/userNotification.req.php');
+require_once ('logic/userNotification.req.php');
 
 //Access to central function
-require("logic/centralFunction.req.php");
+require_once("logic/centralFunction.req.php");
 
 //Access to user management
-require("logic/usermgm.req.php");
+require_once("logic/usermgm.req.php");
 
 //Load current view
-require("logic/views.req.php");
+require_once("logic/views.req.php");
 
 //Handles POST Requests send to the Index
-require ('logic/requestHandler.req.php');
-
+require_once ('logic/requestHandler.req.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -98,13 +99,29 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
     </div>
     <div class="container ui middle aligned center aligned grid">
         <div width="80%" class="column">
-            <?php displayNotifications(); ?>
+            <?php
+                $messageBuffer[MSG_LVL_ERROR] = $_SESSION[MSG_LVL_ERROR];
+                $messageBuffer[MSG_LVL_WARNING] = $_SESSION[MSG_LVL_WARNING];
+                $messageBuffer[MSG_LVL_INFO] = $_SESSION[MSG_LVL_INFO];
+                displayNotifications();
+                $_SESSION[MSG_LVL_ERROR] = $messageBuffer[MSG_LVL_ERROR];
+                $_SESSION[MSG_LVL_WARNING] = $messageBuffer[MSG_LVL_WARNING];
+                $_SESSION[MSG_LVL_INFO] = $messageBuffer[MSG_LVL_INFO];
+                header('location: '.(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
+            ?>
         </div>
     </div>
     <div class="ui center container">
         <?php
         //Load View from GET
         require(loadViews());
+        if(count($messageBuffer[MSG_LVL_ERROR]) < $_SESSION[MSG_LVL_ERROR] ||
+           count($messageBuffer[MSG_LVL_WARNING]) < $_SESSION[MSG_LVL_WARNING] ||
+           count($messageBuffer[MSG_LVL_INFO]) < $_SESSION[MSG_LVL_INFO]) {
+            $_SESSION[MSG_LVL_ERROR] = $messageBuffer[MSG_LVL_ERROR];
+            $_SESSION[MSG_LVL_WARNING] = $messageBuffer[MSG_LVL_WARNING];
+            $_SESSION[MSG_LVL_INFO] = $messageBuffer[MSG_LVL_INFO];
+        }
         ?>
     </div>
 
