@@ -43,9 +43,6 @@ require_once("logic/usermgm.req.php");
 //Load current view
 require_once("logic/views.req.php");
 
-//Security logic for the page
-require_once ('logic/security.req.php');
-
 //Handles POST Requests send to the Index
 require_once ('logic/requestHandler.req.php');
 ?>
