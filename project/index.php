@@ -28,26 +28,26 @@ define("REQ", 'index');
 session_start();
 
 //Establish database connection
-require("logic/db.req.php");
+require_once("logic/db.req.php");
 getDbConnection();
 
 //Enables Notifications / Error Handling
-require ('logic/userNotification.req.php');
+require_once ('logic/userNotification.req.php');
 
 //Access to central function
-require("logic/centralFunction.req.php");
+require_once("logic/centralFunction.req.php");
 
 //Access to user management
-require("logic/usermgm.req.php");
+require_once("logic/usermgm.req.php");
 
 //Load current view
-require("logic/views.req.php");
+require_once("logic/views.req.php");
 
 //Security logic for the page
-require ('logic/security.req.php');
+require_once ('logic/security.req.php');
 
 //Handles POST Requests send to the Index
-require ('logic/requestHandler.req.php');
+require_once ('logic/requestHandler.req.php');
 ?>
 <!DOCTYPE html>
 <html>

@@ -8,6 +8,10 @@
      * @author     Robin Herder
      */
 
+    //Prevent user form accessing file directly
+    require_once('security.req.php');
+    checkDocument();
+
     define("VIEWS_PATH", "views/");
 
     $nav_survey = false;

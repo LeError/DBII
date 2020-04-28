@@ -7,6 +7,10 @@
      * @author     Robin Herder
      */
 
+    //Prevent user form accessing file directly
+    require_once('security.req.php');
+    checkDocument();
+
     define('SESSION_ROLE', 'role');
     define('SESSION_USER', 'user');
     define('ROLE_ADMIN', 'admin');

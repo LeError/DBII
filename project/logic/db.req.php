@@ -9,6 +9,10 @@
      *
      */
 
+    //Prevent user form accessing file directly
+    require_once('security.req.php');
+    checkDocument();
+
     $link = false;
     define("MYSQL_HOST", "127.0.0.1");
     define("MYSQL_USER", "root");
