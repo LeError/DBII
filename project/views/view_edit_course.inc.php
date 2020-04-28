@@ -7,6 +7,14 @@
  * @author     Robin Herder
  */
 
+//Prevent user form accessing file directly
+if(defined('REQ')) {
+    securityCheck(ROLE_ADMIN);
+} else {
+    require_once('../logic/security.req.php');
+    checkDocument();
+}
+
 ?>
 <div class="container ui">
     <?php
