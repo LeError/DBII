@@ -16,7 +16,7 @@
     function checkRole($requiredRole) {
         if(!isset($_SESSION[SESSION_ROLE])) {
             header('location: /');
-        } else if ($_SESSION[SESSION_ROLE] == $requiredRole) {
+        } else if (!($_SESSION[SESSION_ROLE] == $requiredRole)) {
             publishWarningNotification('Sie wurden auf die Startseite da ihnen die rechte für die inhalte die sie aufrufen fehlen');
             header('location: /');
         }
