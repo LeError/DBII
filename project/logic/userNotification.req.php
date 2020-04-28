@@ -31,6 +31,7 @@
     }
 
     function echoNotificationEntries($lvl, $entries) {
+        $entries = array_unique($entries);
         echo '
             <div class="ui '.$lvl.' message"><div class="header">';
         switch ($lvl) {
