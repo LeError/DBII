@@ -7,6 +7,10 @@
      * @author     Robin Herder
      */
 
+    //Prevent user form accessing file directly
+    require_once('security.req.php');
+    checkDocument();
+
     define('MSG_LVL_ERROR', 'error');
     define('MSG_LVL_WARNING', 'warning');
     define('MSG_LVL_INFO', 'info');
@@ -27,6 +31,7 @@
     }
 
     function echoNotificationEntries($lvl, $entries) {
+        $entries = array_unique($entries);
         echo '
             <div class="ui '.$lvl.' message"><div class="header">';
         switch ($lvl) {

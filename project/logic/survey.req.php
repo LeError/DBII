@@ -1,5 +1,9 @@
 <?php
 
+    //Prevent user form accessing file directly
+    require_once('security.req.php');
+    checkDocument();
+
     /**
      * Assign survey to user group on given survey short and course short
      * @author Malik Press

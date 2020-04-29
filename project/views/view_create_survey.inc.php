@@ -11,6 +11,15 @@
  * @author Malik Press
  */
 require ('./logic/survey.req.php');
+
+//Prevent user form accessing file directly
+if(defined('REQ')) {
+    securityCheck(ROLE_ADMIN);
+} else {
+    require_once('../logic/security.req.php');
+    checkDocument();
+}
+
 ?>
 <div class="ui container left aligned">
     <form class="ui form" method="POST" action="index.php?view=create_survey">

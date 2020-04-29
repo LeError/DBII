@@ -6,6 +6,15 @@
  *
  * @author Malik Press
  */
+
+//Prevent user form accessing file directly
+if(defined('REQ')) {
+    securityCheck(ROLE_ADMIN);
+} else {
+    require_once('../logic/security.req.php');
+    checkDocument();
+}
+
 require ('./logic/survey.req.php');
 
 if(isset($_POST["action"])) {
