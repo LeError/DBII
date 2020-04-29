@@ -15,22 +15,25 @@ if(defined('REQ')) {
     checkDocument();
 }
 
-?>
-<div class="ui container center aligned">
-    <form method="POST" action="index.php?view=create_survey">
-        <table width="50%" border="0"  cellspacing="10px">
-            <tr>
-                <th align="left" colspan="2">Create survey</th>
-            </tr>
+/**
+ * Assign survey to user group
+ * @author Malik Press
+ */
+require ('./logic/survey.req.php');
 
-            <tr>
-                <td>Number of questions:</td>
-                <td><input  min="1" value="1" name="numberOfQuestions" type="number" /></td>
-            </tr>
-            <tr>
-                <td align="left" colspan="2"><input type="submit" value="Create survey" name="createSurvey"></td>
-            </tr>
-        </table>
+
+?>
+<div class="ui container left aligned">
+    <form class="ui form" method="POST" action="index.php?view=create_survey">
+        <h3 class="ui dividing header">Create survey</h3>
+        <h4 class="ui header">Number of questions:</h4>
+        <div class="ui input">
+            <input type="number" min="1" name="numberOfQuestions" placeholder="Type in the number of questions..." style="width: 650px">
+        </div> <br>
+        <button class="ui right labeled icon button" type="submit" value="Create survey" name="createSurvey" style="margin-top: 15px">
+            <i class="right arrow icon"></i>
+            Create Survey
+        </button>
     </form>
 
     <?php
@@ -44,40 +47,60 @@ if(defined('REQ')) {
     function createQuestionsHTML(){
 
         echo "
-            <form method=\"POST\" action=\"index.php?view=create_survey\">
-            <table width='50%' border='0'  cellspacing='10px'>
-            <tr>
-                <th align='left' colspan='2'>Set title and title short</th>
-            </tr>
-            <tr>
-                <td>Titel:</td>
-                <td><input maxlength=\"100\" name=\"title\" type=\"text\" size=\"45\"/></td>
-            </tr>
-            <tr>
-                <td>Titel short:</td>
-                <td><input maxlength=\"10\" name=\"titleShort\" type=\"text\" /></td>
-            </tr>
-            </table>
-            <table width='50%' border='0'  cellspacing='10px'>
-            <tr>
-                <th align='left' colspan='2'>Create questions</th>
-            </tr>
-            ";
+            <form class='ui form' method='POST' action='index.php?view=create_survey' style='margin-top: 20px'>
+                <h4 class=\"ui header\">Title:</h4>
+                <div class=\"ui input\"><input type=\"text\" maxlength=\"100\"  name=\"title\" placeholder=\"Type in the title...\" style=\"width: 650px\"></div>
+                
+                <h4 class=\"ui header\">Short title:</h4>
+                <div class=\"ui input\"><input type=\"text\" maxlength=\"10\" name=\"titleShort\" placeholder=\"Type in the shortened title...\" style=\"width: 450px\"></div>
+                
+                <h4 class=\"ui header\">Assign to user groups:</h4>
+                
+                <div class=\"field\">
+                    <div class=\"ui multiple dropdown\">
+                        <input type=\"hidden\" name=\"userGroup[]\">
+                        <i class=\"users icon\"></i>
+                        <span class=\"text\">Assign Groups</span>
+                        <div class=\"menu\">
+                            <div class=\"ui icon search input\">
+                                <i class=\"search icon\"></i>
+                                <input type=\"text\" placeholder=\"Search user groups...\">
+                            </div>
+                            <div class=\"divider\"></div>
+                            <div class=\"header\">
+                                <i class=\"tags icon\"></i>
+                                Tag Label
+                            </div>
+                            <div class=\"scrolling menu\">";
+                                $userGroups = getUserGroups();
+                                foreach ($userGroups as $value) {
+                                    echo "
+                                        <div class=\"item\" data-value='". $value ."'>
+                                            <div class=\"ui black empty circular label\"></div>
+                                            ". $value ."
+                                        </div>
+                                    ";
+                                };
+                            echo "</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h4 class=\"ui header\">Questions:</h4>
+             ";
         $numberOfQuestions = $_POST['numberOfQuestions'];
 
         for($y = 1; $y < $numberOfQuestions+1; $y++){
             echo "
-                <tr>
-                <td>Quest. {$y}:</td>
-                <td><input maxlength='100' name='question[]' type='text' size='60'/></td>
-                </tr>
+                <h5 class=\"ui header\">Question {$y}:</h5>
+                <div class=\"ui input\"><input type=\"text\" maxlength=\"100\" name=\"question[]\" placeholder=\"Type in the question...\" style=\"width: 650px\"></div> <br>
                  ";
         }
         echo "
-            <tr>
-                <td align='left' colspan='2'><input type='submit' value='Submit survey' name='submitSurvey'></td>
-            </tr>
-            </table>
+            <button class=\"ui right labeled icon button\" type=\"submit\" value=\"Submit survey\" name=\"submitSurvey\" style=\"margin-top: 15px\">
+                <i class=\"right arrow icon\"></i>
+                Submit Survey
+            </button>
             </form>
             ";
 
@@ -86,9 +109,16 @@ if(defined('REQ')) {
         $title= $_POST['title'];
         // to do: check if title is already taken!
         $titleShort= $_POST['titleShort'];
-        $username = "Robin";
+        $username = $_SESSION[SESSION_USER];
+
+        $userGroup = $_POST['userGroup'];
+
         $questions = $_POST['question'];
         insertSurvey($username, $title, $titleShort, $questions);
+
+        foreach ($userGroup as $item) {
+            assignSurveyToUserGroup($titleShort, $item);
+        };
     }
     ?>
 </div>

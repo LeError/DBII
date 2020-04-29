@@ -16,33 +16,62 @@ if(defined('REQ')) {
 }
 
 require ('./logic/survey.req.php');
+
+if(isset($_POST["action"])) {
+    header("location: index.php?view=create_survey");
+} elseif (isset($_POST['delete'])) {
+    deleteSurvey($_POST['delete']);
+} elseif (isset($_POST['copy'])) {
+    header("location: index.php?view_copy_survey");
+} elseif (isset($_POST['edit'])) {
+    header("location: index.php?view_edit_survey");
+}
 ?>
 <div class="ui grid">
-       <div class="ui sixteen wide column right aligned">
-           <a href="index.php?view=create_survey">
-                <form method="post">
-                     <button class="ui positive labeled icon button" name="action" type="submit" value="new" style="margin-top: 3vh"><i class="plus icon"></i>Neue Umfrage erstellen</button>
-                </form>
-           </a>
-       </div>
-       <div class="ui sixteen wide column">
-            <h3 class="ui header">Meine Umfragen</h3>
-       </div>
-       <div class="ui sixteen wide column">
-           <form method="post">
-           <?php
-                $name  = 'Malik';
-                $data = getSurveyRecords($name);
-                for ($i = 0; $i < count($data);$i++) {
-                    echo '<div class="bd-survey-list-item" style="padding-bottom: 0.75vh;">
-                <button class="ui button" name="action" type="submit" value="survey'. $i .'" style="width: 50vw;">' . $data[$i] . '</button>
-                <button class="ui inverted secondary icon button" name="action" type="submit" value="edit'. $i .'"><i class="edit icon"></i></button>
-                <button class="ui inverted secondary icon button" name="action" type="submit" value="copy'. $i .'"><i class="copy icon"></i></button>
-                <button class="ui inverted red icon button" name="action" type="submit" value="delete'. $i .'"><i class="trash icon"></i></button>
-            </div>';
-                };
-           ?>
-           </form>
-       </div>
-    <br>
+    <div class="sixteen wide column">
+    <div class="ui raised segment">
+        <a class="ui red ribbon label">Overview</a>
+        <form class="ui form" method="post" style="margin-top: 15px">
+            <div class="ui grid">
+                <div class="row">
+                    <div class="column"><button class="ui right floated positive labeled icon button" type="submit" name="action" value="new"><i class="plus icon"></i>New survey</button></div>
+                </div>
+                <div class="row">
+                    <div class="column"><h3 class="ui dividing header">My surveys</h3></div>
+                </div>
+            <?php
+            $data = getSurveyRecords($_SESSION[SESSION_USER]);
+            for ($i = 0; $i < count($data);$i++) {
+                echo '
+                <div class="row">
+                    <div class="thirteen wide column large screen only">
+                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . $data[$i] . '</button>
+                    </div>
+                    <div class="thirteen wide column mobile only">
+                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . $data[$i] . '</button>
+                    </div>
+                    <div class="three wide column large screen only">
+                        <div class="ui basic fluid icon buttons">
+                            <button class="ui  button" name="edit" type="submit" value="' . $data[$i] . '"><i class="edit icon"></i></button>
+                            <button class="ui  button" name="copy" type="submit" value="' . $data[$i] . '"><i class="copy icon"></i></button>
+                            <button class="ui  button" name="delete" type="submit" value="' . $data[$i] . '"><i class="trash icon"></i></button>
+                        </div>
+                    </div>
+                    <div class="three wide column mobile only">
+                        <div class="ui right floated basic icon top right pointing dropdown button">
+                            <i class="ellipsis horizontal icon"></i>
+                            <div class="menu">
+                                <div class="item"><button class="ui fluid basic button" name="edit" type="submit" value="' . $data[$i] . '"><i class="edit icon"></i>Edit</button></div>
+                                <div class="item"><button class="ui fluid basic button" name="copy" type="submit" value="' . $data[$i] . '"><i class="copy icon"></i>Copy</button></div>
+                                <div class="item"><button class="ui fluid basic button" name="delete" type="submit" value="' . $data[$i] . '"><i class="trash icon"></i>Delete</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>';
+            };
+            ?>
+            </div>
+        </form>
+    </div>
+    </div>
 </div>
