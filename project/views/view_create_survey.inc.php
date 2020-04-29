@@ -6,11 +6,6 @@
  *
  * @author     Moritz Bürkle
  */
-/**
- * Assign survey to user group
- * @author Malik Press
- */
-require ('./logic/survey.req.php');
 
 //Prevent user form accessing file directly
 if(defined('REQ')) {
@@ -19,6 +14,13 @@ if(defined('REQ')) {
     require_once('../logic/security.req.php');
     checkDocument();
 }
+
+/**
+ * Assign survey to user group
+ * @author Malik Press
+ */
+require ('./logic/survey.req.php');
+
 
 ?>
 <div class="ui container left aligned">
