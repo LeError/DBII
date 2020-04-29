@@ -13,9 +13,9 @@ if(isset($_POST["action"])) {
 } elseif (isset($_POST['delete'])) {
     deleteSurvey($_POST['delete']);
 } elseif (isset($_POST['copy'])) {
-
+    header("location: index.php?view_copy_survey");
 } elseif (isset($_POST['edit'])) {
-
+    header("location: index.php?view_edit_survey");
 }
 ?>
 <div class="ui grid">
