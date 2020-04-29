@@ -104,10 +104,6 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
                 $messageBuffer[MSG_LVL_WARNING] = $_SESSION[MSG_LVL_WARNING];
                 $messageBuffer[MSG_LVL_INFO] = $_SESSION[MSG_LVL_INFO];
                 displayNotifications();
-                $_SESSION[MSG_LVL_ERROR] = $messageBuffer[MSG_LVL_ERROR];
-                $_SESSION[MSG_LVL_WARNING] = $messageBuffer[MSG_LVL_WARNING];
-                $_SESSION[MSG_LVL_INFO] = $messageBuffer[MSG_LVL_INFO];
-                header('location: '.(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
             ?>
         </div>
     </div>
@@ -115,12 +111,11 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
         <?php
         //Load View from GET
         require(loadViews());
-        if(count($messageBuffer[MSG_LVL_ERROR]) < $_SESSION[MSG_LVL_ERROR] ||
-           count($messageBuffer[MSG_LVL_WARNING]) < $_SESSION[MSG_LVL_WARNING] ||
-           count($messageBuffer[MSG_LVL_INFO]) < $_SESSION[MSG_LVL_INFO]) {
-            $_SESSION[MSG_LVL_ERROR] = $messageBuffer[MSG_LVL_ERROR];
-            $_SESSION[MSG_LVL_WARNING] = $messageBuffer[MSG_LVL_WARNING];
-            $_SESSION[MSG_LVL_INFO] = $messageBuffer[MSG_LVL_INFO];
+        if(isset($_SESSION[MSG_LVL_ERROR]) || isset($_SESSION[MSG_LVL_WARNING]) || isset($_SESSION[MSG_LVL_INFO])) {
+            $_SESSION[MSG_LVL_ERROR] = array_merge($messageBuffer[MSG_LVL_ERROR],  $_SESSION[MSG_LVL_ERROR]);
+            $_SESSION[MSG_LVL_WARNING] = array_merge($messageBuffer[MSG_LVL_WARNING],  $_SESSION[MSG_LVL_WARNING]);
+            $_SESSION[MSG_LVL_INFO] = array_merge($messageBuffer[MSG_LVL_INFO],  $_SESSION[MSG_LVL_INFO]);
+            header('location: '.(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
         }
         ?>
     </div>
