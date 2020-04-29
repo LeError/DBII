@@ -100,9 +100,9 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
     <div class="container ui middle aligned center aligned grid">
         <div width="80%" class="column">
             <?php
-                $messageBuffer[MSG_LVL_ERROR] = $_SESSION[MSG_LVL_ERROR];
-                $messageBuffer[MSG_LVL_WARNING] = $_SESSION[MSG_LVL_WARNING];
-                $messageBuffer[MSG_LVL_INFO] = $_SESSION[MSG_LVL_INFO];
+                $messageBuffer[MSG_LVL_ERROR] = getNotifications(MSG_LVL_ERROR);
+                $messageBuffer[MSG_LVL_WARNING] = getNotifications(MSG_LVL_WARNING);
+                $messageBuffer[MSG_LVL_INFO] = getNotifications(MSG_LVL_INFO);
                 displayNotifications();
             ?>
         </div>
@@ -111,11 +111,21 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
         <?php
         //Load View from GET
         require(loadViews());
-        if(isset($_SESSION[MSG_LVL_ERROR]) || isset($_SESSION[MSG_LVL_WARNING]) || isset($_SESSION[MSG_LVL_INFO])) {
-            $_SESSION[MSG_LVL_ERROR] = array_merge($messageBuffer[MSG_LVL_ERROR],  $_SESSION[MSG_LVL_ERROR]);
-            $_SESSION[MSG_LVL_WARNING] = array_merge($messageBuffer[MSG_LVL_WARNING],  $_SESSION[MSG_LVL_WARNING]);
-            $_SESSION[MSG_LVL_INFO] = array_merge($messageBuffer[MSG_LVL_INFO],  $_SESSION[MSG_LVL_INFO]);
-            header('location: '.(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
+        if(isset($_SESSION[MSG_LVL_ERROR]) || isset($_SESSION[MSG_LVL_WARNING]) || isset($_SESSION[MSG_LVL_INFO]) ) {
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR))) {
+                $_SESSION[MSG_LVL_ERROR] = array_merge($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR));
+            }
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING))) {
+                $_SESSION[MSG_LVL_WARNING] = array_merge($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING));
+            }
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO))) {
+                $_SESSION[MSG_LVL_INFO] = array_merge($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO));
+            }
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR)) ||
+               checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING)) ||
+               checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO))) {
+                header('location: ' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
+            }
         }
         ?>
     </div>

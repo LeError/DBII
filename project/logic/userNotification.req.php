@@ -77,3 +77,21 @@
             publishInfoNotification($msg);
         }
     }
+
+    function getNotifications($level) {
+        if(isset($_SESSION[$level])) {
+            return $_SESSION[$level];
+        } else {
+            return Array();
+        }
+    }
+
+    function checkIfNotificationAlreadyExists($notificationsArray, $newNotifications) {
+        $size = count(array_unique($notificationsArray));
+        $notificationsArray = array_merge($notificationsArray, $newNotifications);
+        $notificationsArray = array_unique($notificationsArray);
+        if($size < count($notificationsArray)) {
+            return true;
+        }
+        return false;
+    }
