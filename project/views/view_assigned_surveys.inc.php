@@ -10,7 +10,7 @@
 
     //Prevent user form accessing file directly
     if(defined('REQ')) {
-        securityCheck(ROLE_ADMIN);
+        securityCheck(ROLE_USER);
     } else {
         require_once('../logic/security.req.php');
         checkDocument();
