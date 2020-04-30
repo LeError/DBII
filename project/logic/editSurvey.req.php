@@ -87,8 +87,9 @@ function deleteQuestion($id)
     $query->execute();
     $query->bind_result($title);
     $query->fetch();
-    return $result = $title;
     $query->close();
+    return $result = $title;
+
 }
 
         /**
