@@ -125,17 +125,24 @@
  * DISTINCT not needed! Somehow doubled survey title entries in database -> set title to unique in table definition
  * @author Moritz Bürkle
  * @param $username
+ * @return array
  */
     function getAssignedSurveys($username) {
         $query = getDbConnection()->prepare(
-            "SELECT s.title FROM survey_site.survey s, survey_site.assigned a
+            "SELECT title FROM survey_site.survey s, survey_site.assigned a
                WHERE s.title_short = a.title_short
                AND s.username = ?"
 
         );
         $query->bind_param('s', $username);
         $query->execute();
-        return $query->get_result();
+        $query->bind_result($title);
+        $result = array();
+        while ($query->fetch()) {
+            $result[] = $title;
+        };
+        $query->close();
+        return $result;
     }
 /**
  * Get assigned survey course depending on assigned survey name
