@@ -1,3 +1,17 @@
+<?php
+    /**
+     * view_404.inc.php
+     *
+     * View that is displayed when a view is not found by the system
+     *
+     * @author     Robin Herder
+     */
+
+    //Prevent user form accessing file directly
+    require_once('./logic/security.req.php');
+    checkDocument();
+
+?>
 <div class="ui container text center aligned">
     <br/>
     <br/>

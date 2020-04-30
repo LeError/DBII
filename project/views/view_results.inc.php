@@ -7,6 +7,14 @@
  * @author     Moritz Bürkle
  */
 
+//Prevent user form accessing file directly
+if(defined('REQ')) {
+    securityCheck(ROLE_ADMIN);
+} else {
+    require_once('../logic/security.req.php');
+    checkDocument();
+}
+
 require('logic/evaluation.php');
 $username="Leoni";
 $assignedSurveys=getAssignedSurveys($username);
