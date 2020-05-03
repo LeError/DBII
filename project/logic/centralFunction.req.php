@@ -120,6 +120,24 @@
     }
 
 /**
+ * Get assigned surveys of user
+ * DISTINCT not needed! Somehow doubled survey title entries in database -> set title to unique in table definition
+ * @author Moritz Bürkle
+ * @param $username
+ */
+function getSurveys($username) {
+    $query = getDbConnection()->prepare(
+        "SELECT s.title FROM survey_site.survey s, survey_site.assigned a
+               WHERE s.title_short = a.title_short
+               AND s.username = ?"
+
+    );
+    $query->bind_param('s', $username);
+    $query->execute();
+    return $query->get_result();
+}
+
+/**
  * Get course_short on given matricule number
  * @author Malik Press
  * @param $matriculeNumber
@@ -137,7 +155,7 @@ function getCourseShort($matriculeNumber) {
 
 /**
  * Get assigned surveys of a course
- * @author Moritz Buerkle
+ * @author Malik Press
  * @param $course_short
  * @return array
  */
