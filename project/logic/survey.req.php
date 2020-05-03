@@ -57,6 +57,7 @@
 
     /**
      * Get all user groups
+     * @author Malik Press
      * @return array
      */
     function getUserGroups() {

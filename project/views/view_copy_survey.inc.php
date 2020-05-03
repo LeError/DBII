@@ -5,9 +5,6 @@
  */
 
 
-if (isset($_POST["copy"])) {
-    $_SESSION["titleShortOld"] = $_POST["copy"];
-}
 require('./logic/copySurvey.req.php');
 ?>
 

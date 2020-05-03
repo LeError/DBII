@@ -16,8 +16,7 @@ if(defined('REQ')) {
 }
 
 require('logic/evaluation.php');
-$username="Leoni";
-$assignedSurveys=getAssignedSurveys($username);
+$assignedSurveys=getSurveys($_SESSION[SESSION_USER]);
 ?>
 <div class="ui container">
     <br>

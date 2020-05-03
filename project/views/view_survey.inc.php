@@ -22,9 +22,11 @@ if(isset($_POST["action"])) {
 } elseif (isset($_POST['delete'])) {
     deleteSurvey($_POST['delete']);
 } elseif (isset($_POST['copy'])) {
-    header("location: index.php?view_copy_survey");
+    $_SESSION["titleShortOld"] = $_POST["copy"];
+    header("location: index.php?view=copy_survey");
 } elseif (isset($_POST['edit'])) {
-    header("location: index.php?view_edit_survey");
+    $_SESSION["titleShort"] = $_POST["edit"];
+    header("location: index.php?view=edit_survey");
 }
 ?>
 <div class="ui grid">
@@ -45,10 +47,10 @@ if(isset($_POST["action"])) {
                 echo '
                 <div class="row">
                     <div class="thirteen wide column large screen only">
-                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . $data[$i] . '</button>
+                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . getSurveyTitle($data[$i]) . '</button>
                     </div>
                     <div class="thirteen wide column mobile only">
-                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . $data[$i] . '</button>
+                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . getSurveyTitle($data[$i]) . '</button>
                     </div>
                     <div class="three wide column large screen only">
                         <div class="ui basic fluid icon buttons">
