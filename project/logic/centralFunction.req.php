@@ -148,9 +148,9 @@ function getCourseShort($matriculeNumber) {
     $query->bind_param('s',$matriculeNumber);
     $query->execute();
     $result = $query->get_result();
-    $result2 = $result->fetch_assoc()['course_short'];
+    $course_short = $result->fetch_assoc()['course_short'];
     $query->close();
-    return $result2;
+    return $course_short;
 }
 
 /**
@@ -185,9 +185,9 @@ function getCourseShort($matriculeNumber) {
         $query->bind_param('s', $title_short);
         $query->execute();
         $result = $query->get_result();
-        $result2 = $result->fetch_assoc()['title'];
+        $survey_title = $result->fetch_assoc()['title'];
         $query->close();
-        return $result2;
+        return $survey_title;
     }
 /**
  * Get assigned survey course depending on assigned survey name
