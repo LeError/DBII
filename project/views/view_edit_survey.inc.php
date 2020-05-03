@@ -6,10 +6,6 @@
 
 require('./logic/editSurvey.req.php');
 
-if (isset($_POST["edit"])) {
-    checkWhetherInUse($_POST["edit"]);
-    $_SESSION["titleShort"] = $_POST["edit"];
-}
 checkWhetherInUse($_SESSION["titleShort"]);
 $title = getTitle($_SESSION["titleShort"]);
 ?>

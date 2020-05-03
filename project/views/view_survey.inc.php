@@ -22,8 +22,10 @@ if(isset($_POST["action"])) {
 } elseif (isset($_POST['delete'])) {
     deleteSurvey($_POST['delete']);
 } elseif (isset($_POST['copy'])) {
+    $_SESSION["titleShortOld"] = $_POST["copy"];
     header("location: index.php?view=copy_survey");
 } elseif (isset($_POST['edit'])) {
+    $_SESSION["titleShort"] = $_POST["edit"];
     header("location: index.php?view=edit_survey");
 }
 ?>
