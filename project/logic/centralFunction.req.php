@@ -119,30 +119,57 @@
         $query->close();
     }
 
+/**
+ * Get course_short on given matricule number
+ * @author Malik Press
+ * @param $matriculeNumber
+ * @return String
+ */
+function getCourseShort($matriculeNumber) {
+    $query = getDbConnection()->prepare("SELECT course_short FROM survey_site.survey_user WHERE matricule_number = ?");
+    $query->bind_param('s',$matriculeNumber);
+    $query->execute();
+    $result = $query->get_result();
+    $result2 = $result->fetch_assoc()['course_short'];
+    $query->close();
+    return $result2;
+}
 
 /**
- * Get assigned surveys of user
- * DISTINCT not needed! Somehow doubled survey title entries in database -> set title to unique in table definition
- * @author Moritz Bürkle
- * @param $username
+ * Get assigned surveys of a course
+ * @author Moritz Buerkle
+ * @param $course_short
  * @return array
  */
-    function getAssignedSurveys($username) {
+    function getAssignedSurveys($course_short) {
         $query = getDbConnection()->prepare(
-            "SELECT title FROM survey_site.survey s, survey_site.assigned a
-               WHERE s.title_short = a.title_short
-               AND s.username = ?"
-
+            "SELECT title_short FROM survey_site.assigned
+               WHERE course_short = ?"
         );
-        $query->bind_param('s', $username);
+        $query->bind_param('s', $course_short);
         $query->execute();
-        $query->bind_result($title);
+        $query->bind_result($title_short);
         $result = array();
         while ($query->fetch()) {
-            $result[] = $title;
+            $result[] = $title_short;
         };
         $query->close();
         return $result;
+    }
+/**
+ * Get survey title on given title_short
+ * @author Malik Press
+ * @param $title_short
+ * @return array
+ */
+    function getSurveyTitle($title_short) {
+        $query = getDbConnection()->prepare("SELECT title FROM  survey_site.survey WHERE title_short = ?");
+        $query->bind_param('s', $title_short);
+        $query->execute();
+        $result = $query->get_result();
+        $result2 = $result->fetch_assoc()['title'];
+        $query->close();
+        return $result2;
     }
 /**
  * Get assigned survey course depending on assigned survey name

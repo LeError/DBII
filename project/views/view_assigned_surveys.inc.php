@@ -2,6 +2,9 @@
 
     /**
      * view_assigned_surveys.inc.php
+     *
+     *
+     *
      * @author Malik Press
      */
 
@@ -27,12 +30,12 @@
                         <div class="column"><h3 class="ui dividing header">My surveys</h3></div>
                     </div>
                     <?php
-                    $data = getAssignedSurveys($_SESSION[SESSION_USER]);
+                    $data = getAssignedSurveys(getCourseShort($_SESSION[SESSION_USER]));
                     for ($i = 0; $i < count($data);$i++) {
                         echo '
                 <div class="row">
                     <div class="sixteen wide column">
-                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . $data[$i] . '</button>
+                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . getSurveyTitle($data[$i]) . '</button>
                     </div>
                 </div>';
                     };
