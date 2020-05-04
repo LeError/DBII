@@ -39,7 +39,6 @@ $assignedSurveys=getAssignedSurveys($_SESSION["user"]);
     <?php
     if(isset($_POST['createSelectCourse'])){
 
-
         $assignedSurveyName = $_POST['selectedAssignedSurvey'];
         $_SESSION["assignedSurveyName"] = $assignedSurveyName;
 

@@ -58,7 +58,9 @@
             VALUES (?, ?, ?);"
         );
         $query->bind_param('sss', $title_short, $title, $username);
-        $query->execute();
+        if (!$query->execute()) {
+            publishErrorNotification("Failed to create survey!");
+        }
 
         foreach ($questions as $question) {
             $query = getDbConnection()->prepare(
@@ -66,10 +68,17 @@
             VALUES (?, ?);"
             );
             $query->bind_param('ss',$question, $title_short);
-            $query->execute();
+            if (!$query->execute()) {
+                publishErrorNotification("Survey creation failed. Failed to create Question:".$question);
+                $query = getDbConnection()->prepare(
+                    "DELETE FROM survey_site.survey where title_short =?"); //Question delete not needed cause of cascade table def
+                $query->bind_param('s', $title_short);
+                $query->execute();
+                return;
+            }
             $query->close();
         }
-
+        publishInfoNotification("Survey successful created!");
     }
 
 
