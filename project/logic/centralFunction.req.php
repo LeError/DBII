@@ -176,6 +176,7 @@
  */
     function getAssignedSurveyCourses($assignedSurveyName){
 
+
         $query = getDbConnection()->prepare(
             "SELECT a.course_short FROM survey_site.assigned a
                 WHERE a.title_short = 

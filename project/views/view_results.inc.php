@@ -40,10 +40,13 @@ $assignedSurveys=getAssignedSurveys($_SESSION["user"]);
     if(isset($_POST['createSelectCourse'])){
 
         $assignedSurveyName = $_POST['selectedAssignedSurvey'];
-        $_SESSION["assignedSurveyName"] = $assignedSurveyName;
-
-        $assignedSurveyCourses= getAssignedSurveyCourses($assignedSurveyName);
-        createSelectCourse($assignedSurveyCourses);
+        if(!(strcmp($assignedSurveyName,'You have not assigned a survey yet.') == 0 Xor strcmp($assignedSurveyName,'You have not created a survey with this user!') == 0)){
+            $_SESSION["assignedSurveyName"] = $assignedSurveyName;
+            $assignedSurveyCourses= getAssignedSurveyCourses($assignedSurveyName);
+            createSelectCourse($assignedSurveyCourses);
+        }else{
+            publishErrorNotification('You have not assigned a survey yet or you have not created a survey with this user!');
+        }
     }
     function createSelectCourse($assignedSurveyCourses){
 
