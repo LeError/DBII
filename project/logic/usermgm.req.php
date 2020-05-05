@@ -138,8 +138,8 @@
         while ($row = $result->fetch_assoc()) {
             echo '
                 <form method="post" action="index.php?view=user_mgm&course='.$row['course_short'].'">
-                    <div class="bd-survey-list-item" style="padding-bottom: 0.75vh;">
-                        <button class="ui button" name="course" value="course" type="submit" style="width: 50vw;">'.$row['course_short'].' - '.$row['course'].'</button>
+                    <div class="bd-survey-list-item" style="padding-bottom: 0.75vh; width: 100%">
+                        <button class="ui button" name="course" value="course" type="submit" style="width: 80%;">'.$row['course_short'].' - '.$row['course'].'</button>
                         <button class="ui inverted secondary icon button" name="edit" type="submit" value="edit"><i class="edit icon"></i></button>
                         <button class="ui inverted red icon button" name="delete" type="submit" value="delete"><i class="trash icon"></i></button>
                     </div>
