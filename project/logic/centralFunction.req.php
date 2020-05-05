@@ -57,6 +57,9 @@
             "INSERT INTO survey_site.survey (title_short, title, username) 
             VALUES (?, ?, ?);"
         );
+        $title_short = htmlspecialchars($title_short);
+        $title = htmlspecialchars($title);
+        $username = htmlspecialchars($username);
         $query->bind_param('sss', $title_short, $title, $username);
         if (!$query->execute()) {
             publishErrorNotification("Failed to create survey!");
@@ -138,6 +141,7 @@
                AND s.username = ?"
 
         );
+        $username = htmlspecialchars($username);
         $query->bind_param('s', $username);
         $query->execute();
         $results = $query->get_result();
@@ -183,6 +187,7 @@
                 (SELECT s.title_short FROM survey_site.survey s 
                 WHERE s.title = ?)"
         );
+        $assignedSurveyName = htmlspecialchars($assignedSurveyName);
         $query->bind_param('s', $assignedSurveyName);
         $query->execute();
         return $query->get_result();
@@ -197,6 +202,7 @@
             "SELECT s.title_short FROM survey_site.survey s
                 WHERE s.title = ? "
         );
+        $title = htmlspecialchars($title);
         $query->bind_param('s', $title);
         $query->execute();
         $result = $query->get_result();

@@ -49,7 +49,6 @@ class evaluation
             );
             $query->bind_param('sss', $this->title_short, $this->course_short, $question);
             $query->execute();
-            //$values = $query->get_result();
             $query->bind_result($value);
             $values= array();
             while($query->fetch()){
