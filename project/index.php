@@ -124,7 +124,9 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
             if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR)) ||
                checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING)) ||
                checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO))) {
-                header('location: ' . (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
+                echo '<script type="application/javascript">
+                           window.location.replace("'.(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]".'");
+                      </script>';
             }
         }
         ?>
