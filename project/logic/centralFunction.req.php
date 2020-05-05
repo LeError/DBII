@@ -140,7 +140,33 @@
         );
         $query->bind_param('s', $username);
         $query->execute();
-        return $query->get_result();
+        $results = $query->get_result();
+
+        if(mysqli_num_rows($results) == 0){
+
+            $query = getDbConnection()->prepare(
+                "SELECT distinct s.username,'You have not assigned a survey yet.' AS title FROM survey_site.assigned a, survey_site.survey s 
+                        WHERE s.title_short NOT IN (SELECT title_short FROM survey_site.assigned)
+                        AND s.username = ?"
+            );
+            $query->bind_param('s', $username);
+            $query->execute();
+            $results = $query->get_result();
+            if(mysqli_num_rows($results) == 0){
+
+                $query = getDbConnection()->prepare(
+                    "SELECT distinct u.username,'You have not created a survey with this user!' AS title FROM survey_site.user u, survey_site.survey s 
+                            WHERE u.username NOT IN (SELECT username FROM survey_site.survey)
+                            AND u.username = ?"
+                );
+                $query->bind_param('s', $username);
+                $query->execute();
+                $results = $query->get_result();
+                return $results;
+            }
+            return $results;
+        }
+        return $results;
     }
 /**
  * Get assigned survey course depending on assigned survey name
