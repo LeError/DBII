@@ -260,6 +260,11 @@
         $query->close();
     }
 
+    /**
+     * Delete a Survey user
+     * @param $matricule_number of user you want to delete
+     * @author Robin Herder
+     */
     function deleteSurveyUser($matricule_number) {
         $query = getDbConnection()->prepare('
             SELECT * FROM survey_site.survey_user u 
@@ -318,6 +323,11 @@
         header('Location: index.php');
     }
 
+    /**
+     * Checks if a course exists
+     * @param $course course short that you want to delete
+     * @author Robin Herder
+     */
     function checkCourseExists($course) {
         $query = getDbConnection()->prepare('
             SELECT * FROM survey_site.survey_user_group g
