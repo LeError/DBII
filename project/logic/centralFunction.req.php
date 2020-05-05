@@ -53,6 +53,24 @@
     */
     function insertSurvey($username, $title, $title_short, $questions){
 
+        if ($title == '' OR $title_short == ''){
+            publishErrorNotification('Title short or title is empty.');
+            return;
+        }
+        if(ctype_space($title) OR ctype_space($title)){
+            publishErrorNotification('Your short title or your title is whitespace only!!');
+            return;
+        }
+        if (strpos($title, ' ') !== false OR strpos($title_short, ' ') !== false) {
+            publishErrorNotification('There are no whitespaces allowed in title and title short!');
+            return;
+        }
+        foreach($questions as $question){
+            if($question == '' OR ctype_space($question)){
+                publishErrorNotification('Your question is empty or contains whitespace only.');
+                return;
+            }
+        }
         $query = getDbConnection()->prepare(
             "INSERT INTO survey_site.survey (title_short, title, username) 
             VALUES (?, ?, ?);"
@@ -63,6 +81,7 @@
         $query->bind_param('sss', $title_short, $title, $username);
         if (!$query->execute()) {
             publishErrorNotification("Failed to create survey!");
+            return;
         }
 
         foreach ($questions as $question) {
@@ -70,6 +89,7 @@
                 "INSERT INTO survey_site.question (question, title_short) 
             VALUES (?, ?);"
             );
+            $username = htmlspecialchars($question);
             $query->bind_param('ss',$question, $title_short);
             if (!$query->execute()) {
                 publishErrorNotification("Survey creation failed. Failed to create Question:".$question);
