@@ -27,8 +27,12 @@
             "SELECT * FROM survey_site.user u 
             WHERE u.username = ?;
         ");
+        $user = htmlspecialchars($user);
         $query->bind_param('s', $user);
-        $query->execute();
+        if(!$query->execute()) {
+            publishErrorNotification('Ein unerwarteter Fehler ist Aufgetreten');
+            return;
+        }
         $result = $query->get_result();
         if($result->num_rows != 0) {
             publishErrorNotification('Registrierung Gescheitert! Nutzername Bereits vergeben!');
@@ -41,6 +45,7 @@
             "INSERT INTO survey_site.user (username, password) 
             VALUES (?, ?);"
         );
+        $user = htmlspecialchars($user);
         $query->bind_param("ss", $user, $hashedPass);
         if($query->execute()) {
             publishInfoNotification('Neuen Account "'.$user.'" erfolgreich Registriert!');
@@ -62,8 +67,12 @@
             "SELECT u.password FROM survey_site.user u
             WHERE u.username = ?;"
         );
+        $user = htmlspecialchars($user);
         $query->bind_param('s', $user);
-        $query->execute();
+        if(!$query->execute()) {
+            publishErrorNotification('Ein unerwarteter Fehler ist Aufgetreten');
+            return;
+        }
         $result = $query->get_result();
         if($result->num_rows != 1) {
             session_unset();
@@ -79,6 +88,8 @@
                     SET u.password = ?
                     WHERE u.username = ?;"
                 );
+                $user = htmlspecialchars($user);
+                $pass = htmlspecialchars($pass);
                 $query->bind_param('ss', $pass, $user);
                 $query->execute();
                 $query->close();
@@ -102,8 +113,12 @@
             "SELECT * FROM survey_site.survey_user_group g 
             WHERE g.course_short = ?"
         );
+        $course_short = htmlspecialchars($course_short);
         $query->bind_param('s', $course_short);
-        $query->execute();
+        if(!$query->execute()) {
+            publishErrorNotification('Ein unerwarteter Fehler ist Aufgetreten');
+            return;
+        }
         $result = $query->get_result();
         if($result->num_rows != 0) {
             echo '<h1>Hier</h1>';
@@ -115,6 +130,8 @@
             "INSERT INTO survey_user_group (course, course_short) 
             VALUES (?, ?);"
         );
+        $course = htmlspecialchars($course);
+        $course_short = htmlspecialchars($course_short);
         $query->bind_param('ss', $course_short, $course);
         if(!$query->execute()) {
             publishErrorNotification("Ein unerwarteter Fehler ist Aufgetreten. Kurs wurde nicht Erstellt!");
@@ -133,13 +150,16 @@
         $query = getDbConnection()->prepare('
             SELECT * FROM survey_site.survey_user_group;
         ');
-        $query->execute();
+        if(!$query->execute()) {
+            publishErrorNotification('Ein unerwarteter Fehler ist Aufgetreten');
+            return;
+        }
         $result = $query->get_result();
         while ($row = $result->fetch_assoc()) {
             echo '
                 <form method="post" action="index.php?view=user_mgm&course='.$row['course_short'].'">
-                    <div class="bd-survey-list-item" style="padding-bottom: 0.75vh;">
-                        <button class="ui button" name="course" value="course" type="submit" style="width: 50vw;">'.$row['course_short'].' - '.$row['course'].'</button>
+                    <div class="bd-survey-list-item" style="padding-bottom: 0.75vh; width: 100%">
+                        <button class="ui button" name="course" value="course" type="submit" style="width: 80%;">'.$row['course_short'].' - '.$row['course'].'</button>
                         <button class="ui inverted secondary icon button" name="edit" type="submit" value="edit"><i class="edit icon"></i></button>
                         <button class="ui inverted red icon button" name="delete" type="submit" value="delete"><i class="trash icon"></i></button>
                     </div>
@@ -159,8 +179,12 @@
             SELECT * FROM survey_site.survey_user u 
             WHERE u.course_short = ?;
         ');
+        $course = htmlspecialchars($course);
         $query->bind_param('s', $course);
-        $query->execute();
+        if(!$query->execute()) {
+            publishErrorNotification('Ein unerwarteter Fehler ist Aufgetreten');
+            return;
+        }
         $result = $query->get_result();
         if($result->num_rows == 0) {
             echo '
@@ -199,6 +223,7 @@
             DELETE FROM survey_site.survey_user_group 
             WHERE course_short = ?;
         ');
+        $course = htmlspecialchars($course);
         $query->bind_param('s', $course);
         $query->execute() or publishErrorNotification('Kann Kurs nicht Löschen');
         return true;
@@ -216,8 +241,12 @@
             SELECT * FROM survey_site.survey_user u 
             WHERE u.matricule_number = ?;
         ');
+        $matricule_number = htmlspecialchars($matricule_number);
         $query->bind_param('s', $matricule_number);
-        $query->execute();
+        if(!$query->execute()) {
+            publishErrorNotification('Ein unerwarteter Fehler ist Aufgetreten');
+            return;
+        }
         $result = $query->get_result();
         if($result->num_rows != 0) {
             publishErrorNotification('Nutzer mit dieser Matrikelnummer existiert bereits');
@@ -228,6 +257,9 @@
             "INSERT INTO survey_user (matricule_number, username, course_short) 
             VALUES (?, ?, ?);"
         );
+        $matricule_number = htmlspecialchars($matricule_number);
+        $username = htmlspecialchars($username);
+        $course_short = htmlspecialchars($course_short);
         $query->bind_param('sss', $matricule_number, $username, $course_short);
         if($query->execute()) {
             publishInfoNotification('Nutzer wurde angelegt');
@@ -247,8 +279,12 @@
             "SELECT * FROM survey_site.survey_user u 
             WHERE matricule_number = ?;"
         );
+        $matricule_number = htmlspecialchars($matricule_number);
         $query->bind_param('s', $matricule_number);
-        $query->execute();
+        if(!$query->execute()) {
+            publishErrorNotification('Ein unerwarteter Fehler ist Aufgetreten');
+            return;
+        }
         $result = $query->get_result();
         if($result->num_rows == 1) {
             $_SESSION[SESSION_USER] = $matricule_number;
@@ -260,13 +296,22 @@
         $query->close();
     }
 
+    /**
+     * Delete a Survey user
+     * @param $matricule_number of user you want to delete
+     * @author Robin Herder
+     */
     function deleteSurveyUser($matricule_number) {
         $query = getDbConnection()->prepare('
             SELECT * FROM survey_site.survey_user u 
             WHERE u.matricule_number = ?;
         ');
+        $matricule_number = htmlspecialchars($matricule_number);
         $query->bind_param('s', $matricule_number);
-        $query->execute();
+        if(!$query->execute()) {
+            publishErrorNotification('Ein unerwarteter Fehler ist Aufgetreten');
+            return;
+        }
         $result = $query->get_result();
         if($result->num_rows != 1) {
             publishErrorNotification('Kann Nutzer nich Löschen da er nicht existiert!');
@@ -277,6 +322,7 @@
             DELETE FROM survey_site.survey_user 
             WHERE matricule_number = ?; 
         ');
+        $matricule_number = htmlspecialchars($matricule_number);
         $query->bind_param('s', $matricule_number);
         if($query->execute()) {
             publishInfoNotification('Der Nutzer wurde Erfolgreich gel&ouml;scht');
@@ -296,9 +342,10 @@
             "SELECT u.username FROM survey_user u 
             WHERE u.matricule_number = ?;"
         );
+        $matricule_number = htmlspecialchars($matricule_number);
         $query->bind_param('s', $matricule_number);
         if(!$query->execute()) {
-            $return = '';
+            return '';
         }
         $result = $query->get_result();
         if($result->num_rows != 1) {
@@ -318,11 +365,17 @@
         header('Location: index.php');
     }
 
+    /**
+     * Checks if a course exists
+     * @param $course course short that you want to delete
+     * @author Robin Herder
+     */
     function checkCourseExists($course) {
         $query = getDbConnection()->prepare('
             SELECT * FROM survey_site.survey_user_group g
             WHERE g.course_short = ?;
         ');
+        $course = htmlspecialchars($course);
         $query->bind_param('s', $course);
         if($query->execute()) {
             $result = $query->get_result();

@@ -1,3 +1,5 @@
+USE survey_site;
+
 -- Insert Users
 INSERT INTO user (username, password) VALUES ("Leoni", "$2y$10$bFmkrG6gAem093R2tqNhZuL4xWAxYdThrEhHKp7t4ed8jE6eiWhbm");
 INSERT INTO user (username, password) VALUES ("Moe", "$2y$10$bFmkrG6gAem093R2tqNhZuL4xWAxYdThrEhHKp7t4ed8jE6eiWhbm");
