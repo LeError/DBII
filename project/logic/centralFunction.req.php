@@ -191,12 +191,12 @@
     }
 
 
-/**
- * Get finished surveys (title_short) of a user on given matricule_number
- * @author Malik Press
- * @param $matricule_number
- * @return array
- */
+    /**
+     * Get finished surveys (title_short) of a user on given matricule_number
+     * @author Malik Press
+     * @param $matricule_number
+     * @return array
+     */
     function getFinishedSurveys($matricule_number) {
         $query = getDbConnection()->prepare("SELECT title_short FROM survey_site.assigned_status WHERE matricule_number = ?");
         $matricule_number = htmlspecialchars($matricule_number);
@@ -210,12 +210,13 @@
         $query->close();
         return $result;
     }
-/**
- * Get survey title on given title_short
- * @author Malik Press
- * @param $title_short
- * @return array
- */
+
+    /**
+     * Get survey title on given title_short
+     * @author Malik Press
+     * @param $title_short
+     * @return array
+     */
     function getSurveyTitle($title_short) {
         $query = getDbConnection()->prepare("SELECT title FROM  survey_site.survey WHERE title_short = ?");
         $title_short = htmlspecialchars($title_short);
@@ -226,12 +227,13 @@
         $query->close();
         return $survey_title;
     }
-/**
- * Get assigned survey course depending on assigned survey name
- * only used if assignedSurveyName is already proofen assigned
- * @author Moritz Bürkle
- * @param $assignedSurveyName
- */
+
+    /**
+     * Get assigned survey course depending on assigned survey name
+     * only used if assignedSurveyName is already proofen assigned
+     * @author Moritz Bürkle
+     * @param $assignedSurveyName
+     */
     function getAssignedSurveyCourses($assignedSurveyName){
 
         $query = getDbConnection()->prepare(
