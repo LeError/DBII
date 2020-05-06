@@ -17,7 +17,8 @@
     }
 
     if(isset($_POST['survey'])) {
-        header('location: index.php?view_use');
+        header('location: index.php?view=use');
+        $_SESSION["titleShort"] = $_POST["survey"];
     }
 ?>
 <div class="ui grid">

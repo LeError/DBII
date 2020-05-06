@@ -49,9 +49,9 @@
                 $msg = 'Es sind Probleme aufgetreten:';
                 break;
             case MSG_LVL_WARNING:
-                $msg = 'Ein Warnung wurde empfangen:';
+                $msg = 'Eine Warnung wurde empfangen:';
                 break;
-            default: $msg = 'Es wurden Benachichtigungen empfangen:';
+            default: $msg = 'Es wurden Benachrichtigungen empfangen:';
         }
         echo $msg.'</div><ul class="list">';
         foreach ($entries as $entry) {
