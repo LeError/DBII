@@ -128,7 +128,7 @@ if (isset($_POST["saveSurvey"])) {
 
 if (isset($_POST["saveQuestionx"])) {
     if (($_POST["range".$_POST["saveQuestionx"]]) == "") {
-        publishWarningNotification("Um Frage zu speichern muss Wert eingegeben werden!" . $_POST["range"]);
+        publishWarningNotification("Um Frage zu speichern muss Wert eingegeben werden!".$_POST["range".$_POST["saveQuestionx"]]);
     } else {
         saveScoringSystem($_POST["saveQuestionx"], $_SESSION[SESSION_USER], $_POST["range".$_POST["saveQuestionx"]]);
     }
