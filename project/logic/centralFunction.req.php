@@ -51,7 +51,7 @@
         $comment = htmlspecialchars($comment);
         $query->bind_param('sss', $title_short, $matricule_number, $comment);
         if($query->execute()) {
-            publishInfoNotification('Kommentar wurde Gesichert');
+            publishInfoNotification('Kommentar wurde gespeichert');
         } else {
             publishErrorNotification('Kommentar konnte nicht gespeichert werden');
         }
@@ -97,23 +97,39 @@
     * @param $value
     */
     function saveScoringSystem($id,$matricule_number, $value){
-       $test = getDbConnection()->prepare(
+       $query = getDbConnection()->prepare(
             "SELECT * FROM survey_site.answer a WHERE a.id = ? AND a.matricule_number = ?;");
-        $test->bind_param('is', $id, $matricule_number);
-        $test->execute();
-        $rows = mysqli_num_rows($test->get_result());
+        $id=htmlspecialchars($id);
+        $matricule_number=htmlspecialchars($matricule_number);
+       $query->bind_param('is', $id, $matricule_number);
+        $query->execute();
+        $rows = mysqli_num_rows($query->get_result());
         if($rows > 0) {
             $query = getDbConnection()->prepare(
                 "UPDATE survey_site.answer SET value = ? WHERE id = ? AND matricule_number = ?");
+            $id=htmlspecialchars($id);
+            $matricule_number=htmlspecialchars($matricule_number);
+            $value=htmlspecialchars($value);
             $query->bind_param('iis', $value, $id, $matricule_number);
-            $query->execute();
+            if ($query->execute()){
+                publishInfoNotification("Ihre Bewertung wurde angepasst!");
+            }else{
+                publishErrorNotification("Ihre Bewertung konnte nicht angepasst werden!");
+            };
             $query->close();
         } else {
-            $stmt = getDbConnection()->prepare(
+            $query = getDbConnection()->prepare(
                 "INSERT INTO survey_site.answer(id, matricule_number, value) VALUES (?, ?, ?);");
-            $stmt->bind_param('isi', $id, $matricule_number, $value);
-            $stmt->execute();
-            $stmt->close();
+            $id=htmlspecialchars($id);
+            $matricule_number=htmlspecialchars($matricule_number);
+            $value=htmlspecialchars($value);
+            $query->bind_param('isi', $id, $matricule_number, $value);
+            if ($query->execute()){
+                publishInfoNotification("Die Bewertung wurde gespeichert!");
+            }else{
+                publishErrorNotification("Die Bewertung konnte nicht gespeichert werden!");
+            };
+            $query->close();
         }
     }
 
@@ -125,9 +141,13 @@
      */
     function setAssignedStatus($matricule_number, $title_short) {
         $query = getDbConnection() -> prepare(
-            "INSERT INTO survey_site.assigned_status($title_short,$matricule_number)VALUES (?, ?); ");
+            "INSERT INTO survey_site.assigned_status(title_short, matricule_number)VALUES (?, ?); ");
         $query->bind_param('ss', $title_short, $matricule_number);
-        $query->execute();
+        if ($query->execute()){
+            publishInfoNotification("Der Fragebogen wurde abgeschickt!");
+        }else{
+            publishErrorNotification("Der Fragebogen konnte nicht abgeschickt werden!");
+        };
         $query->close();
     }
 
@@ -237,5 +257,66 @@
         $result = $query->get_result();
         return $result->fetch_assoc()['title_short'];
     }
+
+/**
+ * Get answer value for id and mnr
+ * @param $id
+ * @param $mnr
+ * @return mixed
+ * @author Leonie Rauch
+ */
+function getAnswerValue($id, $mnr){
+    $query = getDbConnection()->prepare(
+        "SELECT value FROM survey_site.answer WHERE id = ? AND matricule_number=?;");
+    $id=htmlspecialchars($id);
+    $mnr=htmlspecialchars($mnr);
+    $query->bind_param('is', $id, $mnr);
+    $query->execute();
+    $res = $query->get_result();
+    $row = $res->fetch_assoc();
+    return $row["value"];}
+
+
+/**
+ * get Survey Comment for title_Short and mnr
+ * @param $titleShort
+ * @param $mnr
+ * @return mixed
+ * @author Leonie Rauch
+ */
+function getComment($titleShort, $mnr){
+    $query = getDbConnection()->prepare(
+        "SELECT comment FROM survey_site.assigned_comment WHERE title_short = ? AND matricule_number=?;");
+    $query->bind_param('ss', $titleShort, $mnr);
+    $query->execute();
+    $res = $query->get_result();
+    $row = $res->fetch_assoc();
+    return $row["comment"];
+}
+
+/**
+ * test if all Questions are answered then call function set Assigned Status
+ * @param $titleShort
+ * @param $user
+ *
+ */
+function testAllQuestionsAreAnswered($titleShort, $user){
+    $query = getDbConnection()-> prepare(
+        "SELECT q.question from survey_site.question q where q.title_short=? and q.id not in (select a.id from survey_site.answer a)");
+    $titleShort=htmlspecialchars($titleShort);
+    $query->bind_param('s', $titleShort);
+    if ($query->execute()){
+        $res = $query->get_result();
+        $arr= array();
+        while ($row = $res->fetch_assoc()){
+            $arr[]=$row["question"];
+        }
+        publishErrorNotification("Bitte folgende Fragen beantworten, damit der Fragebogen abgesendet werden kann:  ".implode(';   ', $arr));
+    }else{
+        setAssignedStatus($user, $titleShort);
+        echo '<script type="application/javascript">
+         window.location.replace("index.php");
+      </script>';
+    }}
 
 ?>
