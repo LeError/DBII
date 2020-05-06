@@ -147,7 +147,7 @@
                 publishInfoNotification("Ihre Bewertung wurde angepasst!");
             }else{
                 publishErrorNotification("Ihre Bewertung konnte nicht angepasst werden!");
-            };
+            }
             $query->close();
         } else {
             $query = getDbConnection()->prepare(
@@ -174,7 +174,6 @@
     function setAssignedStatus($matricule_number, $title_short) {
         $query = getDbConnection() -> prepare(
             "INSERT INTO survey_site.assigned_status(title_short, matricule_number)VALUES (?, ?); ");
-            "INSERT INTO survey_site.assigned_status($title_short,$matricule_number)VALUES (?, ?); ");
         $title_short = htmlspecialchars($title_short);
         $matricule_number = htmlspecialchars($matricule_number);
         $query->bind_param('ss', $title_short, $matricule_number);
