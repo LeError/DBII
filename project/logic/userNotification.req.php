@@ -15,6 +15,10 @@
     define('MSG_LVL_WARNING', 'warning');
     define('MSG_LVL_INFO', 'info');
 
+    /**
+     * Triggers displaying of all found notifications
+     * @author Robin Herder
+     */
     function displayNotifications() {
         if(isset($_SESSION[MSG_LVL_ERROR]) && count($_SESSION[MSG_LVL_ERROR]) > 0){
             echoNotificationEntries(MSG_LVL_ERROR, $_SESSION[MSG_LVL_ERROR]);
@@ -30,6 +34,12 @@
         }
     }
 
+    /**
+     * Prints given notifications on the given level
+     * @author Robin Herder
+     * @param $lvl notification level
+     * @param $entries notification level entries
+     */
     function echoNotificationEntries($lvl, $entries) {
         $entries = array_unique($entries);
         echo '
@@ -39,9 +49,9 @@
                 $msg = 'Es sind Probleme aufgetreten:';
                 break;
             case MSG_LVL_WARNING:
-                $msg = 'Ein Warnung wurde empfangen:';
+                $msg = 'Eine Warnung wurde empfangen:';
                 break;
-            default: $msg = 'Es wurden Benachichtigungen empfangen:';
+            default: $msg = 'Es wurden Benachrichtigungen empfangen:';
         }
         echo $msg.'</div><ul class="list">';
         foreach ($entries as $entry) {
@@ -51,6 +61,11 @@
         echo '</ul></div>';
     }
 
+    /**
+     * Raises a Error Notification
+     * @author RObin Herder
+     * @param $msg Error to publish
+     */
     function publishErrorNotification($msg) {
         if(isset($_SESSION[MSG_LVL_ERROR]) && is_array($_SESSION[MSG_LVL_ERROR])) {
             array_push($_SESSION[MSG_LVL_ERROR], $msg);
@@ -60,6 +75,11 @@
         }
     }
 
+    /**
+     * Raises a Warning Notification
+     * @author RObin Herder
+     * @param $msg Warning to publish
+     */
     function publishWarningNotification($msg) {
         if(isset($_SESSION[MSG_LVL_WARNING]) && is_array($_SESSION[MSG_LVL_WARNING])) {
             array_push($_SESSION[MSG_LVL_WARNING], $msg);
@@ -69,6 +89,11 @@
         }
     }
 
+    /**
+     * Raises a Info Notification
+     * @author RObin Herder
+     * @param $msg Info to publish
+     */
     function publishInfoNotification($msg) {
         if(isset($_SESSION[MSG_LVL_INFO]) && is_array($_SESSION[MSG_LVL_INFO])) {
             array_push($_SESSION[MSG_LVL_INFO], $msg);
@@ -78,6 +103,12 @@
         }
     }
 
+    /**
+     * Returns Notifications for suiting level
+     * @author Robin Herder
+     * @param $level notification level
+     * @return array|mixed notifications or empty array
+     */
     function getNotifications($level) {
         if(isset($_SESSION[$level])) {
             return $_SESSION[$level];
@@ -86,6 +117,13 @@
         }
     }
 
+    /**
+     * Checks if new Notification was raised
+     * @author Robin Herder
+     * @param $notificationsArray current notifications array
+     * @param $newNotifications newly raised notification array
+     * @return bool state if new notification was raised
+     */
     function checkIfNotificationAlreadyExists($notificationsArray, $newNotifications) {
         $size = count(array_unique($notificationsArray));
         $notificationsArray = array_merge($notificationsArray, $newNotifications);

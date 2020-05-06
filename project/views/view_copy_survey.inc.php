@@ -1,49 +1,63 @@
 <?php
 
 /**
+ * view for set title and shorttitle to copy the selected survey
  * @author Leonie Rauch
  */
 
-
-if (isset($_POST["copy"])) {
-    $_SESSION["titleShortOld"] = $_POST["copy"];
+//Prevent user form accessing file directly
+if(defined('REQ')) {
+    securityCheck(ROLE_ADMIN);
+} else {
+    require_once('../logic/security.req.php');
+    checkDocument();
 }
+
+
 require('./logic/copySurvey.req.php');
 ?>
 
+<div class="ui one column grid center aligned" style="margin-top: 30px">
+    <div class="column">
+        <div class="ui raised segment left aligned">
+            <div class="column"><h3 class="ui dividing header">Kopieren des
+                    Fragebogens <?php echo $_SESSION["titleShortOld"] ?></h3></div>
 
-<div class="ui container center aligned">
-    <form method="post" action="">
-        <table width="50%" border="0" cellspacing="10px">
-            <tr>
-                <th align="left" colspan="2">Kopieren des Fragebogens <?php echo $_SESSION["titleShortOld"] ?> </th>
-            </tr>
+            <form action="" method="post" class="ui large form" style="margin: 25px 10px 10px;">
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">
+                            K&uuml;rzel neuer Fragebogen
+                        </div>
+                        <input maxlength="10" name="title_short" type="text"
+                               value= <?php $tit = (isset($_POST['title_short']) ? $_POST['title_short'] : '');
+                        print ($tit) ?>>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">
+                            Name neuer Fragebogen
+                        </div>
+                        <input maxlength="100" name="title" type="text"
+                               value= <?php $t = (isset($_POST['title']) ? $_POST['title'] : '');
+                        print ($t) ?>>
+                    </div>
+                </div>
+                <button class="ui fluid large teal button submit" name="copySurvey" type="submit">Fragebogen kopieren
+                </button>
+            </form>
 
-            <tr>
-                <td>Kürzel neuer Fragebogen:</td>
-                <td><input maxlength="10" name="title_short" type="text"
-                           value= <?php $tit = (isset($_POST['title_short']) ? $_POST['title_short'] : '');
-                           print ($tit) ?>></td>
-            </tr>
-            <tr>
-                <td> Name neuer Fragebogen:</td>
-                <td><input maxlength="100" name="title" type="text"
-                           value= <?php $t = (isset($_POST['title']) ? $_POST['title'] : '');
-                           print ($t) ?>></td>
-            </tr>
-            <tr>
-                <td align="left" colspan="2"><input type="submit" value="Fragebogen kopieren" name="copySurvey"></td>
-            </tr>
-        </table>
-    </form>
-
+        </div>
+    </div>
+</div>
 </div>
 
 <?php
 if (isset($_POST["copySurvey"])) {
     if ((($_POST['title_short']) == "" && ($_POST['title']) == "") || (($_POST['title_short']) == "" && ($_POST['title']) <> "") ||
         (($_POST['title_short']) <> "" && ($_POST['title']) == "")) {
-        echo "Bitte alle Felder befüllen!";
+        publishWarningNotification( "Bitte alle Felder befüllen!");
     } else {
         copySurvey($_POST["title_short"], $_POST["title"], $_SESSION[SESSION_USER], $_SESSION["titleShortOld"]);
     }

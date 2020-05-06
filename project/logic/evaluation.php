@@ -53,7 +53,6 @@ class evaluation
             );
             $query->bind_param('sss', $this->title_short, $this->course_short, $question);
             $query->execute();
-            //$values = $query->get_result();
             $query->bind_result($value);
             $values= array();
             while($query->fetch()){
@@ -67,9 +66,12 @@ class evaluation
                 $results[$row][3] = max($values);
                 $results[$row][4] = self::calculateStandardDeviation($values, $results[$row][1]);
                 $row++;
+            }else{
+                publishErrorNotification("There happend something wrong. Seems like there aren't any result values for a question");
             }
         }
         $this->results = $results;
+        publishInfoNotification("Results successfully calculated!");
     }
 
     public static function calculateStandardDeviation($values, $avg){

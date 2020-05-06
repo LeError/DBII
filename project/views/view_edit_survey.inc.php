@@ -1,38 +1,68 @@
 <?php
 
 /**
+ * view to insert new Question to Survey or delete Survey
  * @author Leonie Rauch
  */
 
+//Prevent user form accessing file directly
+if(defined('REQ')) {
+    securityCheck(ROLE_ADMIN);
+} else {
+    require_once('../logic/security.req.php');
+    checkDocument();
+}
+
 require('./logic/editSurvey.req.php');
 
-if (isset($_POST["edit"])) {
-    checkWhetherInUse($_POST["edit"]);
-    $_SESSION["titleShort"] = $_POST["edit"];
-}
 checkWhetherInUse($_SESSION["titleShort"]);
 $title = getTitle($_SESSION["titleShort"]);
 ?>
 
-    <div class="ui grid" id="test">
+    <div class="ui one column grid center aligned" style="margin-top: 30px">
+        <div class="column">
+            <div class="ui raised segment left aligned">
+                <div class="column"><h3 class="ui dividing header">Anpassen des Fragebogens: <?php echo $title ?></h3></div>
+
+                <form action="" method="post" class="ui  form" style="margin: 25px 10px 10px;">
+                    <div class="field">
+                        <div class="ui labeled input">
+                            <div class="ui label">
+                               Frage hinzufügen
+                            </div>
+                                <input max="100" name="question" type="text">
+                        </div>
+                    </div>
+                        <button class="ui  teal button submit" name="insertQuestion" type="submit">Frage speichern</button>
+                </form>
+
+
+
+
+    <div class="ui grid">
         <div class="ui sixteen wide column"></div>
         <div class="ui sixteen wide column">
-            <h3 class="ui header">Anpassen des Fragebogens: <?php echo $_SESSION["titleShort"] ?></h3>
+            <h4 class="ui header">Beinhaltete Fragen</h4>
         </div>
+    </div>
 
-        <table width="50%" border="0" cellspacing="10px" id="na">
+        <table class="ui striped collapsing celled table">
+            <thead>
+            <tr>
+                <th>Fragen-Nummer </th>
+                <th>Frage</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
             <form action="" method="post">
-                <tr>
-                    <td align="left" colspan="2">Frage hinzufügen:</td>
-                    <td><input max="100" name="question" type="text"/></td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="ui button" name="insertQuestion" type="submit" style="width: 7vw;">Save</button>
-                    </td>
-                </tr>
+<?php showQuestions($title);?>
             </form>
-            <table>
+            </tbody>
+        </table>
+    </div>
+            </div>
+        </div>
     </div>
 
 
@@ -46,10 +76,6 @@ if (isset($_POST["insertQuestion"])) {
         insertQuestion($_POST["question"], $_SESSION["titleShort"]);
     }
 }
-
-
-/*Fragen anzeigen*/
-showQuestions($title);
 
 /*Fragen löschen*/
 if (isset($_POST["deleteQ"])) {

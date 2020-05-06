@@ -23,14 +23,17 @@
         loginSurveyUser($_POST['sul_identifier']);
     }
 
+    //register a new user
     if(isset($_POST['c_course_short']) && isset($_POST['c_course'])) {
         registerCourse($_POST['c_course_short'], $_POST['c_course']);
     }
 
+    //register new survey user
     if(isset($_POST['c_course_short']) && isset($_POST['c_mat_nr']) && isset($_POST['c_name'])) {
         registerSurveyUser($_POST['c_mat_nr'], $_POST['c_name'], $_POST['c_course_short']);
     }
 
+    //delete a survey user
     if(isset($_POST['d_student'])) {
         deleteSurveyUser($_POST['d_student']);
     }
