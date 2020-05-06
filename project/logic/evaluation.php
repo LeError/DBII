@@ -71,7 +71,6 @@ class evaluation
             }
         }
         $this->results = $results;
-        publishInfoNotification("Results successfully calculated!");
     }
 
     public static function calculateStandardDeviation($values, $avg){
