@@ -21,30 +21,30 @@ define("NAV_URL_SURVEY", "index.php?view=survey");
 define("NAV_URL_USER_MANAGEMENT", "index.php?view=user_mgm");
 define("NAV_URL_RESULTS", "index.php?view=results");
 define("NAV_URL_LOGOUT", "index.php?logout");
+//Check if only index is accessed
+define("REQ", 'index');
 
 //Session Management
 session_start();
-define("SESSION_ID", session_id());
 
 //Establish database connection
-require("logic/db.req.php");
+require_once("logic/db.req.php");
 getDbConnection();
 
 //Enables Notifications / Error Handling
-require ('logic/userNotification.req.php');
-
-//Load current view
-require("logic/views.req.php");
+require_once ('logic/userNotification.req.php');
 
 //Access to central function
-require("logic/centralFunction.req.php");
+require_once("logic/centralFunction.req.php");
 
 //Access to user management
-require("logic/usermgm.req.php");
+require_once("logic/usermgm.req.php");
+
+//Load current view
+require_once("logic/views.req.php");
 
 //Handles POST Requests send to the Index
-require ('logic/requestHandler.req.php');
-
+require_once ('logic/requestHandler.req.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -99,20 +99,100 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
     </div>
     <div class="container ui middle aligned center aligned grid">
         <div width="80%" class="column">
-            <?php displayNotifications(); ?>
+            <?php
+                $messageBuffer[MSG_LVL_ERROR] = getNotifications(MSG_LVL_ERROR);
+                $messageBuffer[MSG_LVL_WARNING] = getNotifications(MSG_LVL_WARNING);
+                $messageBuffer[MSG_LVL_INFO] = getNotifications(MSG_LVL_INFO);
+                displayNotifications();
+            ?>
         </div>
     </div>
     <div class="ui center container">
         <?php
         //Load View from GET
         require(loadViews());
+        if(isset($_SESSION[MSG_LVL_ERROR]) || isset($_SESSION[MSG_LVL_WARNING]) || isset($_SESSION[MSG_LVL_INFO]) ) {
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR))) {
+                $_SESSION[MSG_LVL_ERROR] = array_merge($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR));
+            }
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING))) {
+                $_SESSION[MSG_LVL_WARNING] = array_merge($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING));
+            }
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO))) {
+                $_SESSION[MSG_LVL_INFO] = array_merge($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO));
+            }
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR)) ||
+               checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING)) ||
+               checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO))) {
+                echo '<script type="application/javascript">
+                           window.location.replace("'.(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]".'");
+                      </script>';
+            }
+        }
         ?>
     </div>
 
     <?php
 } else if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE_USER) {
     ?>
-
+    <div class="ui tablet computer only padded grid">
+        <div class="ui borderless fluid huge inverted menu">
+            <div class="ui container">
+                <a class="header item" href="<?php echo NAV_URL_TITLE ?>"><?php echo NAV_LBL_TITLE ?></a>
+                <div class="item center aligned"><?php if(isset($_SESSION[SESSION_USER])) { echo 'Hi '.getSurveyUsername($_SESSION[SESSION_USER]); }?></div>
+                <a class="item right aligned" href="<?php echo NAV_URL_LOGOUT ?>"><?php echo NAV_LBL_LOGOUT ?></a>
+            </div>
+        </div>
+    </div>
+    <div class="ui mobile only padded grid">
+        <div class="ui borderless fluid huge inverted menu">
+            <a class="header item" href="<?php echo NAV_URL_TITLE ?>"><?php echo NAV_LBL_TITLE ?></a>
+            <div class="right menu">
+                <div class="item">
+                    <button class="ui icon toggle basic inverted button">
+                        <i class="content icon"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="ui vertical borderless fluid inverted menu">
+                <a class="item" href="<?php echo NAV_URL_LOGOUT ?>"><?php echo NAV_LBL_LOGOUT ?></a>
+            </div>
+        </div>
+    </div>
+    <div class="container ui middle aligned center aligned grid">
+        <div width="80%" class="column">
+            <?php
+                $messageBuffer[MSG_LVL_ERROR] = getNotifications(MSG_LVL_ERROR);
+                $messageBuffer[MSG_LVL_WARNING] = getNotifications(MSG_LVL_WARNING);
+                $messageBuffer[MSG_LVL_INFO] = getNotifications(MSG_LVL_INFO);
+                displayNotifications();
+            ?>
+        </div>
+    </div>
+    <div class="ui center container">
+        <?php
+        //Load View from GET
+        require(loadViews());
+        if(isset($_SESSION[MSG_LVL_ERROR]) || isset($_SESSION[MSG_LVL_WARNING]) || isset($_SESSION[MSG_LVL_INFO]) ) {
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR))) {
+                $_SESSION[MSG_LVL_ERROR] = array_merge($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR));
+            }
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING))) {
+                $_SESSION[MSG_LVL_WARNING] = array_merge($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING));
+            }
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO))) {
+                $_SESSION[MSG_LVL_INFO] = array_merge($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO));
+            }
+            if(checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_ERROR], getNotifications(MSG_LVL_ERROR)) ||
+                checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_WARNING], getNotifications(MSG_LVL_WARNING)) ||
+                checkIfNotificationAlreadyExists($messageBuffer[MSG_LVL_INFO], getNotifications(MSG_LVL_INFO))) {
+                echo '<script type="application/javascript">
+                           window.location.replace("'.(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]".'");
+                      </script>';
+            }
+        }
+        ?>
+    </div>
     <?php
 } else {
     ?>
@@ -186,6 +266,9 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 <script src="js/login.js"></script>
 <script src="js/navigation.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/create_course.js"></script>
+<script src="js/edit_course.js"></script>
 </body>
 </html>
 <?php

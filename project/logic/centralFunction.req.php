@@ -1,5 +1,9 @@
 <?php
 
+    //Prevent user form accessing file directly
+    require_once('security.req.php');
+    checkDocument();
+
     /**
      * Checks if a user is assigned to a survey / is allowed to access
      * @author Robin Herder
@@ -15,8 +19,13 @@
             AND a.title_short = ?
             AND u.matricule_number = ?;"
         );
+        $title_short = htmlspecialchars($title_short);
+        $matricule_number = htmlspecialchars($title_short);
         $query->bind_param('ss', $title_short, $matricule_number);
-        $query->execute();
+        if(!$query->execute()) {
+            publishErrorNotification('Ein unerwarteter Fehler ist aufgetreten!');
+            return false;
+        }
         $rows = mysqli_num_rows($query->get_result());
         $query->close();
         if($rows > 0) {
@@ -37,8 +46,15 @@
             "INSERT INTO survey_site.assigned_comment (title_short, matricule_number, comment) 
             VALUES (?, ?, ?);"
         );
+        $title_short = htmlspecialchars($title_short);
+        $matricule_number = htmlspecialchars($matricule_number);
+        $comment = htmlspecialchars($comment);
         $query->bind_param('sss', $title_short, $matricule_number, $comment);
-        $query->execute();
+        if($query->execute()) {
+            publishInfoNotification('Kommentar wurde Gesichert');
+        } else {
+            publishErrorNotification('Kommentar konnte nicht gespeichert werden');
+        }
         $query->close();
     }
 
@@ -142,24 +158,24 @@
     function setAssignedStatus($matricule_number, $title_short) {
         $query = getDbConnection() -> prepare(
             "INSERT INTO survey_site.assigned_status($title_short,$matricule_number)VALUES (?, ?); ");
+        $title_short = htmlspecialchars($title_short);
+        $matricule_number = htmlspecialchars($matricule_number);
         $query->bind_param('ss', $title_short, $matricule_number);
         $query->execute();
         $query->close();
     }
 
-
-/**
- * Get assigned surveys of user
- * DISTINCT not needed! Somehow doubled survey title entries in database -> set title to unique in table definition
- * @author Moritz Bürkle
- * @param $username
- */
-    function getAssignedSurveys($username) {
+    /**
+     * Get assigned surveys of user
+     * DISTINCT not needed! Somehow doubled survey title entries in database -> set title to unique in table definition
+     * @author Moritz Bürkle
+     * @param $username
+     */
+    function getSurveys($username) {
         $query = getDbConnection()->prepare(
             "SELECT s.title FROM survey_site.survey s, survey_site.assigned a
-               WHERE s.title_short = a.title_short
-               AND s.username = ?"
-
+                   WHERE s.title_short = a.title_short
+                   AND s.username = ?"
         );
         $username = htmlspecialchars($username);
         $query->bind_param('s', $username);
@@ -192,12 +208,91 @@
         }
         return $results;
     }
-/**
- * Get assigned survey course depending on assigned survey name
- * only used if assignedSurveyName is already proofen assigned
- * @author Moritz Bürkle
- * @param $assignedSurveyName
- */
+
+    /**
+     * Get course_short on given matricule number
+     * @author Malik Press
+     * @param $matriculeNumber
+     * @return String
+     */
+    function getCourseShort($matriculeNumber) {
+        $query = getDbConnection()->prepare("SELECT course_short FROM survey_site.survey_user WHERE matricule_number = ?");
+        $matriculeNumber = htmlspecialchars($matriculeNumber);
+        $query->bind_param('s',$matriculeNumber);
+        $query->execute();
+        $result = $query->get_result();
+        $course_short = $result->fetch_assoc()['course_short'];
+        $query->close();
+        return $course_short;
+    }
+
+    /**
+     * Get assigned surveys of a course
+     * @author Malik Press
+     * @param $course_short
+     * @return array
+     */
+    function getAssignedSurveys($course_short) {
+        $query = getDbConnection()->prepare(
+            "SELECT title_short FROM survey_site.assigned
+               WHERE course_short = ?"
+        );
+        $course_short = htmlspecialchars($course_short);
+        $query->bind_param('s', $course_short);
+        $query->execute();
+        $query->bind_result($title_short);
+        $result = array();
+        while ($query->fetch()) {
+            $result[] = $title_short;
+        };
+        $query->close();
+        return $result;
+    }
+
+
+    /**
+     * Get finished surveys (title_short) of a user on given matricule_number
+     * @author Malik Press
+     * @param $matricule_number
+     * @return array
+     */
+    function getFinishedSurveys($matricule_number) {
+        $query = getDbConnection()->prepare("SELECT title_short FROM survey_site.assigned_status WHERE matricule_number = ?");
+        $matricule_number = htmlspecialchars($matricule_number);
+        $query->bind_param('s', $matricule_number);
+        $query->execute();
+        $query->bind_result($title_short);
+        $result = array();
+        while ($query->fetch()) {
+            $result[] = $title_short;
+        }
+        $query->close();
+        return $result;
+    }
+
+    /**
+     * Get survey title on given title_short
+     * @author Malik Press
+     * @param $title_short
+     * @return array
+     */
+    function getSurveyTitle($title_short) {
+        $query = getDbConnection()->prepare("SELECT title FROM  survey_site.survey WHERE title_short = ?");
+        $title_short = htmlspecialchars($title_short);
+        $query->bind_param('s', $title_short);
+        $query->execute();
+        $result = $query->get_result();
+        $survey_title = $result->fetch_assoc()['title'];
+        $query->close();
+        return $survey_title;
+    }
+
+    /**
+     * Get assigned survey course depending on assigned survey name
+     * only used if assignedSurveyName is already proofen assigned
+     * @author Moritz Bürkle
+     * @param $assignedSurveyName
+     */
     function getAssignedSurveyCourses($assignedSurveyName){
 
 
@@ -212,11 +307,12 @@
         $query->execute();
         return $query->get_result();
     }
-/**
- * Get title_short for title
- * @author Moritz Bürkle
- * @param $title
- */
+
+    /**
+     * Get title_short for title
+     * @author Moritz Bürkle
+     * @param $title
+     */
     function getTitleShort($title){
         $query = getDbConnection()->prepare(
             "SELECT s.title_short FROM survey_site.survey s

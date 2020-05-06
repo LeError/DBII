@@ -1,5 +1,9 @@
 <?php
 
+    //Prevent user form accessing file directly
+    require_once('security.req.php');
+    checkDocument();
+
     /**
      * Assign survey to user group on given survey short and course short
      * @author Malik Press
@@ -8,9 +12,9 @@
     */
     function assignSurveyToUserGroup($title_short,$course_short) {
         $query = getDbConnection()->prepare(
-            "INSERT INTO survey_site.assigned($title_short,$course_short) VALUES (?,?);"
+            "INSERT INTO survey_site.assigned(title_short,course_short) VALUES (?,?);"
         );
-        $query->bind_param("ss",§title_short, §course_short);
+        $query->bind_param("ss",$title_short, $course_short);
         $query->execute();
         $query->close();
     };
@@ -49,5 +53,36 @@
         };
         $query->close();
         return $result;
+    }
+
+    /**
+     * Get all user groups
+     * @author Malik Press
+     * @return array
+     */
+    function getUserGroups() {
+        $query = getDbConnection()->prepare('
+            SELECT course_short FROM survey_site.survey_user_group;
+        ');
+        $query->execute();
+        $query->bind_result($user_group);
+        $result = array();
+        while ($query->fetch()) {
+            $result[] = $user_group;
+        };
+        $query->close();
+        return $result;
+    }
+
+    /**
+     * Delete a survey on given short title
+     * @author Malik Press
+     * @param $title_short
+     */
+    function deleteSurvey($title_short) {
+        $query = getDbConnection()->prepare('DELETE FROM survey_site.survey WHERE title_short = ?;
+        ');
+        $query->bind_param('s',$title_short);
+        $query->execute();
     }
 ?>

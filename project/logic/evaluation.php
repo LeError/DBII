@@ -7,6 +7,10 @@
  * @author     Moritz Bürkle
  */
 
+//Prevent user form accessing file directly
+require_once('security.req.php');
+checkDocument();
+
 class evaluation
 {
     private $title_short;
