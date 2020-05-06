@@ -305,13 +305,10 @@ function testAllQuestionsAreAnswered($titleShort, $user){
         "SELECT q.question from survey_site.question q where q.title_short=? and q.id not in (select a.id from survey_site.answer a)");
     $titleShort=htmlspecialchars($titleShort);
     $query->bind_param('s', $titleShort);
-    if ($query->execute()){
-        $res = $query->get_result();
-        $arr= array();
-        while ($row = $res->fetch_assoc()){
-            $arr[]=$row["question"];
-        }
-        publishErrorNotification("Bitte folgende Fragen beantworten, damit der Fragebogen abgesendet werden kann:  ".implode(';   ', $arr));
+    $query->execute();
+    $rows = mysqli_num_rows($query->get_result());
+    if($rows > 0) {
+        publishErrorNotification("Bitte alle Fragen beantworten, damit der Fragebogen abgesendet werden kann");
     }else{
         setAssignedStatus($user, $titleShort);
         echo '<script type="application/javascript">
