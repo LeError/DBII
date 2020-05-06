@@ -105,7 +105,7 @@
                 "INSERT INTO survey_site.question (question, title_short) 
             VALUES (?, ?);"
             );
-            $username = htmlspecialchars($question);
+            $question = htmlspecialchars($question);
             $query->bind_param('ss',$question, $title_short);
             if (!$query->execute()) {
                 publishErrorNotification("Survey creation failed. Failed to create Question:".$question);
