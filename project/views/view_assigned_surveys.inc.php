@@ -31,12 +31,25 @@
                         <div class="column"><h3 class="ui dividing header">My surveys</h3></div>
                     </div>
                     <?php
-                    $data = getAssignedSurveys(getCourseShort($_SESSION[SESSION_USER]));
-                    for ($i = 0; $i < count($data);$i++) {
+                    $surveys = getAssignedSurveys(getCourseShort($_SESSION[SESSION_USER]));
+                    $finishedSurveys = getFinishedSurveys($_SESSION[SESSION_USER]);
+                    $unfinishedSurveys = array();
+                    if (count($finishedSurveys) == 0) {
+                        $unfinishedSurveys = $surveys;
+                    } else {
+                        foreach ($finishedSurveys as $title_finished) {
+                            foreach ($surveys as $title_survey) {
+                                if (!($title_finished == $title_survey)) {
+                                    array_push($unfinishedSurveys, $title_survey);
+                                }
+                            }
+                        }
+                    }
+                    for ($i = 0; $i < count($unfinishedSurveys);$i++) {
                         echo '
                 <div class="row">
                     <div class="sixteen wide column">
-                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . getSurveyTitle($data[$i]) . '</button>
+                        <button class="ui fluid button" name="survey" type="submit" value="' . $unfinishedSurveys[$i] . '">' . getSurveyTitle($unfinishedSurveys[$i]) . '</button>
                     </div>
                 </div>';
                     };
@@ -47,3 +60,5 @@
     </div>
 </div>
 
+
+?>

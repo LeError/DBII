@@ -69,23 +69,55 @@
     */
     function insertSurvey($username, $title, $title_short, $questions){
 
+        if ($title == '' OR $title_short == ''){
+            publishErrorNotification('Title short or title is empty.');
+            return;
+        }
+        if(ctype_space($title) OR ctype_space($title)){
+            publishErrorNotification('Your short title or your title is whitespace only!!');
+            return;
+        }
+        if (strpos($title, ' ') !== false OR strpos($title_short, ' ') !== false) {
+            publishErrorNotification('There are no whitespaces allowed in title and title short!');
+            return;
+        }
+        foreach($questions as $question){
+            if($question == '' OR ctype_space($question)){
+                publishErrorNotification('Your question is empty or contains whitespace only.');
+                return;
+            }
+        }
         $query = getDbConnection()->prepare(
             "INSERT INTO survey_site.survey (title_short, title, username) 
             VALUES (?, ?, ?);"
         );
+        $title_short = htmlspecialchars($title_short);
+        $title = htmlspecialchars($title);
+        $username = htmlspecialchars($username);
         $query->bind_param('sss', $title_short, $title, $username);
-        $query->execute();
+        if (!$query->execute()) {
+            publishErrorNotification("Failed to create survey!");
+            return;
+        }
 
         foreach ($questions as $question) {
             $query = getDbConnection()->prepare(
                 "INSERT INTO survey_site.question (question, title_short) 
             VALUES (?, ?);"
             );
+            $question = htmlspecialchars($question);
             $query->bind_param('ss',$question, $title_short);
-            $query->execute();
+            if (!$query->execute()) {
+                publishErrorNotification("Survey creation failed. Failed to create Question:".$question);
+                $query = getDbConnection()->prepare(
+                    "DELETE FROM survey_site.survey where title_short =?"); //Question delete not needed cause of cascade table def
+                $query->bind_param('s', $title_short);
+                $query->execute();
+                return;
+            }
             $query->close();
         }
-
+        publishInfoNotification("Survey successful created!");
     }
 
 
@@ -142,6 +174,9 @@
     function setAssignedStatus($matricule_number, $title_short) {
         $query = getDbConnection() -> prepare(
             "INSERT INTO survey_site.assigned_status(title_short, matricule_number)VALUES (?, ?); ");
+            "INSERT INTO survey_site.assigned_status($title_short,$matricule_number)VALUES (?, ?); ");
+        $title_short = htmlspecialchars($title_short);
+        $matricule_number = htmlspecialchars($matricule_number);
         $query->bind_param('ss', $title_short, $matricule_number);
         if ($query->execute()){
             publishInfoNotification("Der Fragebogen wurde abgeschickt!");
@@ -162,11 +197,37 @@
             "SELECT s.title FROM survey_site.survey s, survey_site.assigned a
                    WHERE s.title_short = a.title_short
                    AND s.username = ?"
-
         );
+        $username = htmlspecialchars($username);
         $query->bind_param('s', $username);
         $query->execute();
-        return $query->get_result();
+        $results = $query->get_result();
+
+        if(mysqli_num_rows($results) == 0){
+
+            $query = getDbConnection()->prepare(
+                "SELECT distinct s.username,'You have not assigned a survey yet.' AS title FROM survey_site.assigned a, survey_site.survey s 
+                        WHERE s.title_short NOT IN (SELECT title_short FROM survey_site.assigned)
+                        AND s.username = ?"
+            );
+            $query->bind_param('s', $username);
+            $query->execute();
+            $results = $query->get_result();
+            if(mysqli_num_rows($results) == 0){
+
+                $query = getDbConnection()->prepare(
+                    "SELECT distinct u.username,'You have not created a survey with this user!' AS title FROM survey_site.user u, survey_site.survey s 
+                            WHERE u.username NOT IN (SELECT username FROM survey_site.survey)
+                            AND u.username = ?"
+                );
+                $query->bind_param('s', $username);
+                $query->execute();
+                $results = $query->get_result();
+                return $results;
+            }
+            return $results;
+        }
+        return $results;
     }
 
     /**
@@ -177,6 +238,7 @@
      */
     function getCourseShort($matriculeNumber) {
         $query = getDbConnection()->prepare("SELECT course_short FROM survey_site.survey_user WHERE matricule_number = ?");
+        $matriculeNumber = htmlspecialchars($matriculeNumber);
         $query->bind_param('s',$matriculeNumber);
         $query->execute();
         $result = $query->get_result();
@@ -196,6 +258,7 @@
             "SELECT title_short FROM survey_site.assigned
                WHERE course_short = ?"
         );
+        $course_short = htmlspecialchars($course_short);
         $query->bind_param('s', $course_short);
         $query->execute();
         $query->bind_result($title_short);
@@ -203,6 +266,27 @@
         while ($query->fetch()) {
             $result[] = $title_short;
         };
+        $query->close();
+        return $result;
+    }
+
+
+    /**
+     * Get finished surveys (title_short) of a user on given matricule_number
+     * @author Malik Press
+     * @param $matricule_number
+     * @return array
+     */
+    function getFinishedSurveys($matricule_number) {
+        $query = getDbConnection()->prepare("SELECT title_short FROM survey_site.assigned_status WHERE matricule_number = ?");
+        $matricule_number = htmlspecialchars($matricule_number);
+        $query->bind_param('s', $matricule_number);
+        $query->execute();
+        $query->bind_result($title_short);
+        $result = array();
+        while ($query->fetch()) {
+            $result[] = $title_short;
+        }
         $query->close();
         return $result;
     }
@@ -215,6 +299,7 @@
      */
     function getSurveyTitle($title_short) {
         $query = getDbConnection()->prepare("SELECT title FROM  survey_site.survey WHERE title_short = ?");
+        $title_short = htmlspecialchars($title_short);
         $query->bind_param('s', $title_short);
         $query->execute();
         $result = $query->get_result();
@@ -231,12 +316,14 @@
      */
     function getAssignedSurveyCourses($assignedSurveyName){
 
+
         $query = getDbConnection()->prepare(
             "SELECT a.course_short FROM survey_site.assigned a
                 WHERE a.title_short = 
                 (SELECT s.title_short FROM survey_site.survey s 
                 WHERE s.title = ?)"
         );
+        $assignedSurveyName = htmlspecialchars($assignedSurveyName);
         $query->bind_param('s', $assignedSurveyName);
         $query->execute();
         return $query->get_result();
@@ -252,6 +339,7 @@
             "SELECT s.title_short FROM survey_site.survey s
                 WHERE s.title = ? "
         );
+        $title = htmlspecialchars($title);
         $query->bind_param('s', $title);
         $query->execute();
         $result = $query->get_result();
