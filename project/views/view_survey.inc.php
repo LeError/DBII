@@ -46,17 +46,30 @@ if(isset($_POST["action"])) {
             for ($i = 0; $i < count($data);$i++) {
                 echo '
                 <div class="row">
-                    <div class="thirteen wide column large screen only">
+                    <div class="thirteen wide column computer only">
+                        <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . getSurveyTitle($data[$i]) . '</button>
+                    </div>
+                    <div class="thirteen wide column tablet only">
                         <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . getSurveyTitle($data[$i]) . '</button>
                     </div>
                     <div class="thirteen wide column mobile only">
                         <button class="ui fluid button" name="survey" type="submit" value="' . $data[$i] . '">' . getSurveyTitle($data[$i]) . '</button>
                     </div>
-                    <div class="three wide column large screen only">
+                    <div class="three wide column computer only">
                         <div class="ui basic fluid icon buttons">
                             <button class="ui  button" name="edit" type="submit" value="' . $data[$i] . '"><i class="edit icon"></i></button>
                             <button class="ui  button" name="copy" type="submit" value="' . $data[$i] . '"><i class="copy icon"></i></button>
                             <button class="ui  button" name="delete" type="submit" value="' . $data[$i] . '"><i class="trash icon"></i></button>
+                        </div>
+                    </div>
+                    <div class="three wide column tablet only">
+                        <div class="ui right floated basic icon top right pointing dropdown button">
+                            <i class="ellipsis horizontal icon"></i>
+                            <div class="menu">
+                                <div class="item"><button class="ui fluid basic button" name="edit" type="submit" value="' . $data[$i] . '"><i class="edit icon"></i>Edit</button></div>
+                                <div class="item"><button class="ui fluid basic button" name="copy" type="submit" value="' . $data[$i] . '"><i class="copy icon"></i>Copy</button></div>
+                                <div class="item"><button class="ui fluid basic button" name="delete" type="submit" value="' . $data[$i] . '"><i class="trash icon"></i>Delete</button></div>
+                            </div>
                         </div>
                     </div>
                     <div class="three wide column mobile only">

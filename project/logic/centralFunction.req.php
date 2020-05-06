@@ -126,6 +126,8 @@
     function setAssignedStatus($matricule_number, $title_short) {
         $query = getDbConnection() -> prepare(
             "INSERT INTO survey_site.assigned_status($title_short,$matricule_number)VALUES (?, ?); ");
+        $title_short = htmlspecialchars($title_short);
+        $matricule_number = htmlspecialchars($matricule_number);
         $query->bind_param('ss', $title_short, $matricule_number);
         $query->execute();
         $query->close();
@@ -142,7 +144,6 @@
             "SELECT s.title FROM survey_site.survey s, survey_site.assigned a
                    WHERE s.title_short = a.title_short
                    AND s.username = ?"
-
         );
         $query->bind_param('s', $username);
         $query->execute();
@@ -157,6 +158,7 @@
      */
     function getCourseShort($matriculeNumber) {
         $query = getDbConnection()->prepare("SELECT course_short FROM survey_site.survey_user WHERE matricule_number = ?");
+        $matriculeNumber = htmlspecialchars($matriculeNumber);
         $query->bind_param('s',$matriculeNumber);
         $query->execute();
         $result = $query->get_result();
@@ -176,6 +178,7 @@
             "SELECT title_short FROM survey_site.assigned
                WHERE course_short = ?"
         );
+        $course_short = htmlspecialchars($course_short);
         $query->bind_param('s', $course_short);
         $query->execute();
         $query->bind_result($title_short);
@@ -183,6 +186,27 @@
         while ($query->fetch()) {
             $result[] = $title_short;
         };
+        $query->close();
+        return $result;
+    }
+
+
+    /**
+     * Get finished surveys (title_short) of a user on given matricule_number
+     * @author Malik Press
+     * @param $matricule_number
+     * @return array
+     */
+    function getFinishedSurveys($matricule_number) {
+        $query = getDbConnection()->prepare("SELECT title_short FROM survey_site.assigned_status WHERE matricule_number = ?");
+        $matricule_number = htmlspecialchars($matricule_number);
+        $query->bind_param('s', $matricule_number);
+        $query->execute();
+        $query->bind_result($title_short);
+        $result = array();
+        while ($query->fetch()) {
+            $result[] = $title_short;
+        }
         $query->close();
         return $result;
     }
@@ -195,6 +219,7 @@
      */
     function getSurveyTitle($title_short) {
         $query = getDbConnection()->prepare("SELECT title FROM  survey_site.survey WHERE title_short = ?");
+        $title_short = htmlspecialchars($title_short);
         $query->bind_param('s', $title_short);
         $query->execute();
         $result = $query->get_result();
