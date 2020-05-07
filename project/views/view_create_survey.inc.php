@@ -112,11 +112,12 @@ require ('./logic/survey.req.php');
         $username = $_SESSION[SESSION_USER];
 
         $userGroup = $_POST['userGroup'];
+        $userGroupArray = explode(',',$userGroup[0]);
 
         $questions = $_POST['question'];
         insertSurvey($username, $title, $titleShort, $questions);
 
-        foreach ($userGroup as $item) {
+        foreach ($userGroupArray as $item) {
             assignSurveyToUserGroup($titleShort, $item);
         };
     }
