@@ -193,7 +193,7 @@
      */
     function getSurveys($username) {
         $query = getDbConnection()->prepare(
-            "SELECT s.title FROM survey_site.survey s, survey_site.assigned a
+            "SELECT DISTINCT s.title FROM survey_site.survey s, survey_site.assigned a
                    WHERE s.title_short = a.title_short
                    AND s.username = ?"
         );
