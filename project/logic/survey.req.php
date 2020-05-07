@@ -14,6 +14,8 @@
         $query = getDbConnection()->prepare(
             "INSERT INTO survey_site.assigned(title_short,course_short) VALUES (?,?);"
         );
+        $title_short = htmlspecialchars($title_short);
+        $course_short = htmlspecialchars($course_short);
         $query->bind_param("ss",$title_short, $course_short);
         $query->execute();
         $query->close();
@@ -27,8 +29,10 @@
      */
     function unAssignSurveyFromUserGroup($title_short,$course_short) {
         $query = getDbConnection()->prepare(
-            "DELETE from survey_site.assigned a where a.title_short = ? AND a.course_short = ?;"
+            "DELETE from survey_site.assigned where title_short = ? AND course_short = ?;"
         );
+        $title_short = htmlspecialchars($title_short);
+        $course_short = htmlspecialchars($course_short);
         $query->bind_param("ss",$title_short, $course_short);
         $query->execute();
         $query->close();
@@ -44,6 +48,7 @@
         $query = getDbConnection()->prepare(
             "SELECT title_short FROM survey_site.survey s WHERE s.username = ? "
         );
+        $username = htmlspecialchars($username);
         $query->bind_param("s",$username);
         $query->execute();
         $query->bind_result($title_short);
@@ -82,7 +87,28 @@
     function deleteSurvey($title_short) {
         $query = getDbConnection()->prepare('DELETE FROM survey_site.survey WHERE title_short = ?;
         ');
+        $title_short = htmlspecialchars($title_short);
         $query->bind_param('s',$title_short);
         $query->execute();
+    }
+
+    /**
+     * Get assigned user groups
+     * @author Malik Press
+     * @param $title_short
+     * @return array
+     */
+    function getAssignedGroups($title_short) {
+        $query = getDbConnection()->prepare("SELECT course_short FROM survey_site.assigned WHERE title_short = ?");
+        $title_short = htmlspecialchars($title_short);
+        $query->bind_param("s",$title_short);
+        $query->execute();
+        $query->bind_result($user_group);
+        $result = array();
+        while ($query->fetch()) {
+            $result[] = $user_group;
+        }
+        $query->close();
+        return $result;
     }
 ?>
