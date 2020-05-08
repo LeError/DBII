@@ -17,7 +17,9 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $keys = array_keys($arrQuestions);
-$_SESSION["q"]= $keys[0];
+if(!isset($_SESSION["q"])) {
+    $_SESSION["q"] = 0;
+}
 $anzahlFragen = count($keys);
 
 if (isset($_POST["next"]) && $_SESSION["q"] < $anzahlFragen){

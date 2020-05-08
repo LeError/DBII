@@ -20,6 +20,11 @@
         header('location: index.php?view=use');
         $_SESSION["titleShort"] = $_POST["survey"];
     }
+
+    if(isset($_SESSION["q"])) {
+        unset($_SESSION["q"]);
+    }
+
 ?>
 <div class="ui grid">
     <div class="sixteen wide column">
