@@ -18,25 +18,31 @@ while ($row = $result->fetch_assoc()) {
 
 $keys = array_keys($arrQuestions);
 $_SESSION["q"]= $keys[0];
-$r= $keys[count($keys)-1];
-$anzahlFragen =count($keys);
+$anzahlFragen = count($keys);
 
-if (isset($_POST["next"])){
+if (isset($_POST["next"]) && $_SESSION["q"] < $anzahlFragen){
     $_SESSION["q"]++;
+} else if(isset($_POST["back"]) && $_SESSION["q"] > 0) {
+    $_SESSION["q"]--;
 }
 ?>
-    <h3 class="ui dividing header">Beantwortung des Fragebogens <?php echo $title; ?>
-                        mit insgesamt <?php echo $anzahlFragen ?> Fragen </h3>
-                    <h5 class="ui header"> Es können Werte von 1 (gut) bis 5 (schlecht) vergeben
-                            werden!</h5>
-
-                            <form method="post" action="">
-                                <?php
-                                if ($_SESSION["q"] < $r) {
-                                    echo var_export($arrQuestions[$_SESSION["q"]][0]);
-                                    echo var_export($arrQuestions[$_SESSION["q"]][1]);}
-                                    echo '<input type="submit" name="next" value="Nächste Frage">';
-                                echo"</form>";
+    <h3 class="ui dividing header">Beantwortung des Fragebogens <?php echo $title; ?>mit insgesamt <?php echo $anzahlFragen ?> Fragen </h3>
+    <h5 class="ui header"> Es können Werte von 1 (gut) bis 5 (schlecht) vergeben werden!</h5>
+        <form method="post" action="index.php?view=use">
+    <?php
+        echo var_export($arrQuestions[$_SESSION["q"]][0]);
+        echo var_export($arrQuestions[$_SESSION["q"]][1]);
+        $back = "";
+        if($_SESSION["q"] == 0) {
+            $back = "disabled";
+        }
+        $next = "";
+        if($_SESSION["q"] == $anzahlFragen - 1) {
+            $next = "disabled";
+        }
+        echo '<input type="submit" name="back" value="Vorherige Frage" '.$back.'>';
+        echo '<input type="submit" name="next" value="Nächste Frage"'.$next.'>';
+        echo"</form>";
 
 
 
