@@ -193,7 +193,7 @@
      */
     function getSurveys($username) {
         $query = getDbConnection()->prepare(
-            "SELECT s.title FROM survey_site.survey s, survey_site.assigned a
+            "SELECT DISTINCT s.title FROM survey_site.survey s, survey_site.assigned a
                    WHERE s.title_short = a.title_short
                    AND s.username = ?"
         );
@@ -247,39 +247,17 @@
     }
 
     /**
-     * Get assigned surveys of a course
+     * Get all unfinished surveys on given matricule_number and course_short
      * @author Malik Press
+     * @param $matricule_number
      * @param $course_short
      * @return array
      */
-    function getAssignedSurveys($course_short) {
-        $query = getDbConnection()->prepare(
-            "SELECT title_short FROM survey_site.assigned
-               WHERE course_short = ?"
-        );
-        $course_short = htmlspecialchars($course_short);
-        $query->bind_param('s', $course_short);
-        $query->execute();
-        $query->bind_result($title_short);
-        $result = array();
-        while ($query->fetch()) {
-            $result[] = $title_short;
-        };
-        $query->close();
-        return $result;
-    }
-
-
-    /**
-     * Get finished surveys (title_short) of a user on given matricule_number
-     * @author Malik Press
-     * @param $matricule_number
-     * @return array
-     */
-    function getFinishedSurveys($matricule_number) {
-        $query = getDbConnection()->prepare("SELECT title_short FROM survey_site.assigned_status WHERE matricule_number = ?");
+    function getUnFinishedSurveys($matricule_number, $course_short) {
+        $query = getDbConnection()->prepare("SELECT title_short FROM survey_site.assigned a WHERE NOT EXISTS(SELECT title_short FROM survey_site.assigned_status s WHERE a.title_short = s.title_short AND matricule_number = ?) AND course_short = ?");
         $matricule_number = htmlspecialchars($matricule_number);
-        $query->bind_param('s', $matricule_number);
+        $course_short = htmlspecialchars($course_short);
+        $query->bind_param('ss',$matricule_number,$course_short);
         $query->execute();
         $query->bind_result($title_short);
         $result = array();
@@ -289,7 +267,6 @@
         $query->close();
         return $result;
     }
-
     /**
      * Get survey title on given title_short
      * @author Malik Press

@@ -31,19 +31,9 @@
                         <div class="column"><h3 class="ui dividing header">My surveys</h3></div>
                     </div>
                     <?php
-                    $surveys = getAssignedSurveys(getCourseShort($_SESSION[SESSION_USER]));
-                    $finishedSurveys = getFinishedSurveys($_SESSION[SESSION_USER]);
-                    $unfinishedSurveys = array();
-                    if (count($finishedSurveys) == 0) {
-                        $unfinishedSurveys = $surveys;
-                    } else {
-                        foreach ($finishedSurveys as $title_finished) {
-                            foreach ($surveys as $title_survey) {
-                                if (!($title_finished == $title_survey)) {
-                                    array_push($unfinishedSurveys, $title_survey);
-                                }
-                            }
-                        }
+                    $unfinishedSurveys = getUnFinishedSurveys($_SESSION[SESSION_USER], getCourseShort($_SESSION[SESSION_USER]));
+                    if (count($unfinishedSurveys) == 0) {
+                        publishInfoNotification("Keine Umfragen verfügbar!");
                     }
                     for ($i = 0; $i < count($unfinishedSurveys);$i++) {
                         echo '
