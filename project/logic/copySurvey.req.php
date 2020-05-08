@@ -51,6 +51,7 @@ function copyQuestion($titleShortOld, $titleShort)
         $titleShort=htmlspecialchars($titleShort);
         if ($query->execute()) {
             publishInfoNotification("Der kopierte Fragebogen wurde erfolgreich gespeichert!");
+            echo '<script type="application/javascript">  window.location.replace("index.php?view=survey/"); </script>';
         } else {
             publishErrorNotification("Kopieren gescheitert!");
         }
