@@ -143,9 +143,7 @@
             $matricule_number=htmlspecialchars($matricule_number);
             $value=htmlspecialchars($value);
             $query->bind_param('iis', $value, $id, $matricule_number);
-            if ($query->execute()){
-               publishInfoNotification("Ihre Bewertung wurde angepasst!");
-            }else{
+            if (!$query->execute()){
                 publishErrorNotification("Ihre Bewertung konnte nicht angepasst werden!");
             }
             $query->close();
