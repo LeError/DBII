@@ -90,19 +90,23 @@ require ('./logic/survey.req.php');
              ";
         $numberOfQuestions = $_POST['numberOfQuestions'];
 
-        for($y = 1; $y < $numberOfQuestions+1; $y++){
-            echo "
+        if (!($numberOfQuestions == '' OR ctype_space($numberOfQuestions))) {
+            for ($y = 1; $y < $numberOfQuestions + 1; $y++) {
+                echo "
                 <h5 class=\"ui header\">Question {$y}:</h5>
                 <div class=\"ui input\"><input type=\"text\" maxlength=\"100\" name=\"question[]\" placeholder=\"Type in the question...\" style=\"width: 650px\"></div> <br>
                  ";
-        }
-        echo "
+            }
+            echo "
             <button class=\"ui right labeled icon button\" type=\"submit\" value=\"Submit survey\" name=\"submitSurvey\" style=\"margin-top: 15px\">
                 <i class=\"right arrow icon\"></i>
                 Submit Survey
             </button>
             </form>
             ";
+        }else{
+            publishErrorNotification('Set a value which is bigger ore equal to 1');
+        }
 
     }
     function createSurvey(){
