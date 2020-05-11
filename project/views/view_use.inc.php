@@ -56,10 +56,12 @@ if (isset($_POST["saveComment"])) {
     }
 }
 if (isset($_POST["saveSurvey"])) {
-    testAllQuestionsAreAnswered($_SESSION["titleShort"], $_SESSION[SESSION_USER]);
+    if(!isset($_POST["range"])){
+    testAllQuestionsAreAnswered($_SESSION["titleShort"], $_SESSION[SESSION_USER]);}
     if(isset($_POST["range"])){
 
-    saveScoringSystem($arrQuestions[$_SESSION["q"]][0], $_SESSION[SESSION_USER], $_POST["range"]);}
+    saveScoringSystem($arrQuestions[$_SESSION["q"]][0], $_SESSION[SESSION_USER], $_POST["range"]);
+        testAllQuestionsAreAnswered($_SESSION["titleShort"], $_SESSION[SESSION_USER]);}
 
 
 }
