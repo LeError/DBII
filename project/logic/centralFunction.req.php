@@ -81,10 +81,7 @@
             publishErrorNotification('There are no whitespaces allowed in title and title short!');
             return;
         }
-        if($questions.count()==0){
-            publishErrorNotification('A survey must have at least one question.');
-            return;
-        }
+
         foreach($questions as $question){
             if($question == '' OR ctype_space($question)){
                 publishErrorNotification('Your question is empty or contains whitespace only.');
