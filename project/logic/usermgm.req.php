@@ -121,7 +121,6 @@
         }
         $result = $query->get_result();
         if($result->num_rows != 0) {
-            echo '<h1>Hier</h1>';
             publishErrorNotification('Kurskürzel bereits vergeben. Kurs wurde nicht erstellt!');
             return;
         }
@@ -132,7 +131,7 @@
         );
         $course = htmlspecialchars($course);
         $course_short = htmlspecialchars($course_short);
-        $query->bind_param('ss', $course_short, $course);
+        $query->bind_param('ss', $course, $course_short);
         if(!$query->execute()) {
             publishErrorNotification("Ein unerwarteter Fehler ist Aufgetreten. Kurs wurde nicht Erstellt!");
             $query->close();

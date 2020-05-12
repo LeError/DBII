@@ -23,7 +23,7 @@
         loginSurveyUser($_POST['sul_identifier']);
     }
 
-    //register a new user
+    //register a new course
     if(isset($_POST['c_course_short']) && isset($_POST['c_course'])) {
         registerCourse($_POST['c_course_short'], $_POST['c_course']);
     }
