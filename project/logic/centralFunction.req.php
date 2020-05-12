@@ -1,5 +1,9 @@
 <?php
 
+    /**
+     * File stores the central functions requested by the Requirements
+     */
+
     //Prevent user form accessing file directly
     require_once('security.req.php');
     checkDocument();

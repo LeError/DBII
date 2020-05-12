@@ -3,13 +3,14 @@
     /**
      * security.req.php
      *
-     * used to enforce security measures
+     * used to enforce security measures. Stores functions to prevent the user from viewing files not logged in or directly (without index + view system)
      *
      * @author     Robin Herder
      */
 
     define('SECURITY', 'security.req.php');
 
+    //prevent user from directly accessing this file
     if(session_status() == PHP_SESSION_NONE) {
         session_start();
     }

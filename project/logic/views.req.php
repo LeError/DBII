@@ -3,7 +3,7 @@
     /**
      * view.req.php
      *
-     * Stores logic for view System
+     * Stores logic for view System To dynamically load view files and displaying them based on a _GET navigation
      *
      * @author     Robin Herder
      */
@@ -13,10 +13,6 @@
     checkDocument();
 
     define("VIEWS_PATH", "views/");
-
-    $nav_survey = false;
-    $nav_user_mgm = false;
-    $nav_results = false;
 
     /**
      * determines the view to show from _GET or 404 view

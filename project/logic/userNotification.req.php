@@ -16,7 +16,7 @@
     define('MSG_LVL_INFO', 'info');
 
     /**
-     * Triggers displaying of all found notifications
+     * Triggers displaying of all found notification types
      * @author Robin Herder
      */
     function displayNotifications() {
@@ -35,7 +35,7 @@
     }
 
     /**
-     * Prints given notifications on the given level
+     * Prints given notifications on the given level at the point where the function is called
      * @author Robin Herder
      * @param $lvl notification level
      * @param $entries notification level entries
@@ -118,7 +118,7 @@
     }
 
     /**
-     * Checks if new Notification was raised
+     * Checks if new Notification was raised by comparing two different notification arrays
      * @author Robin Herder
      * @param $notificationsArray current notifications array
      * @param $newNotifications newly raised notification array

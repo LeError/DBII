@@ -2,12 +2,12 @@
     /**
      * requestHandler.req.php
      *
-     * File required by the Index.php which process POST requests and calls according functions
+     * File required by the Index.php which process POST requests and calls according functions (Not used by allTeam Members)
      *
      * @author     Robin Herder
      */
 
-    //Prevent user form accessing file directly
+    //Prevent user from accessing file directly
     require_once('security.req.php');
     checkDocument();
 

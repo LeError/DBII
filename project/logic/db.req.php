@@ -52,7 +52,7 @@
      * @return string escaped user input
      */
     function escapeSql($text){
-        $text = mysqli_real_escape_string(getConnection(), $text);
+        $text = mysqli_real_escape_string(getDbConnection(), $text);
         return "'".$text."'";
     }
 

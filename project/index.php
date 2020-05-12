@@ -4,6 +4,8 @@
  * index.php
  *
  * Entry Point for the Website and loads (requires) the php logic files
+ * The user always views the index file. All contents are automatically loaded via a custom view system.
+ * Direct access to other php files is prevented
  *
  * @author     Robin Herder
  */
@@ -27,23 +29,23 @@ define("REQ", 'index');
 //Session Management
 session_start();
 
-//Establish database connection
+//Establish database connection / Access to basic DB FUnctions
 require_once("logic/db.req.php");
 getDbConnection();
 
 //Enables Notifications / Error Handling
 require_once ('logic/userNotification.req.php');
 
-//Access to central function
+//Access to central function (Requirment)
 require_once("logic/centralFunction.req.php");
 
-//Access to user management
+//Access to user management Functions
 require_once("logic/usermgm.req.php");
 
-//Load current view
+//Load current view / load view system
 require_once("logic/views.req.php");
 
-//Handles POST Requests send to the Index
+//Handles POST Requests send to the Index (Central request handler is not used in all parts of the application)
 require_once ('logic/requestHandler.req.php');
 ?>
 <!DOCTYPE html>
@@ -65,6 +67,7 @@ require_once ('logic/requestHandler.req.php');
 <body id="root">
 
 <?php
+//Displayed when logged in as user
 if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE_ADMIN) {
     ?>
 
@@ -133,6 +136,7 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
     </div>
 
     <?php
+    //Displayed for logged in survey users
 } else if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE_USER) {
     ?>
     <div class="ui tablet computer only padded grid">
@@ -194,6 +198,7 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
         ?>
     </div>
     <?php
+    //when not logged in display login
 } else {
     ?>
 
@@ -272,6 +277,6 @@ if (array_key_exists(SESSION_ROLE, $_SESSION) && $_SESSION[SESSION_ROLE] == ROLE
 </body>
 </html>
 <?php
-//close database connection
+//close database connection (not required in views because the Index Always closes the connection)
 cleanUpDb();
 ?>

@@ -3,6 +3,7 @@
      * usermgm.req.php
      *
      * Stores the logic for the user management (user & survey user)
+     * From login to deleting a  user or course all functions are stored in this file
      *
      * @author     Robin Herder
      */
@@ -142,7 +143,7 @@
     }
 
     /**
-     * Function for generating the Course Entities in the Course View
+     * Function for generating the Course Entities in the Course View with forms and interaction buttons
      * @author Robin Herder
      */
     function displayCourses() {
@@ -169,7 +170,7 @@
     }
 
     /**
-     * Displays Members of a Course
+     * Displays Members of a Course as a list item
      * @author Robin Herder
      * @param $course
      */
@@ -212,7 +213,7 @@
     }
 
     /**
-     * deletes a course
+     * deletes a course (All survey users in the course will also be deleted and the answers to the surveys they gave)
      * @author Robin Herder
      * @param $course
      * @return bool
@@ -296,7 +297,7 @@
     }
 
     /**
-     * Delete a Survey user
+     * Delete a Survey user (All answers that that user gave to a survey will be also deleted)
      * @param $matricule_number of user you want to delete
      * @author Robin Herder
      */
@@ -331,7 +332,7 @@
     }
 
     /**
-     * Function to return name of survey_user
+     * Function to return name of survey_user for example used to greet user
      * @author Robin Herder
      * @param $matricule_number identifier of survey_user
      * @return username
