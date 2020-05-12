@@ -26,20 +26,20 @@ class evaluation
     public function createResultsArray(){
 
         $query = getDbConnection()->prepare(
-            "SELECT q.question FROM survey_site.question q
+            "SELECT q.id FROM survey_site.question q
                 WHERE q.title_short = ?  "
         );
         $query->bind_param('s', $this->title_short);
         $query->execute();
         //$questions = $query->get_result();
-        $query->bind_result($question);
-        $questions= array();
+        $query->bind_result($id);
+        $ids= array();
         while($query->fetch()){
-            $questions[] = $question;
+            $ids[] = $id;
         }
         $row = 0;
         $results=array();
-        foreach ($questions as $question){
+        foreach ($ids as $id){
             $query = getDbConnection()->prepare(
                 "SELECT a.value FROM survey_site.survey s, survey_site.question q, survey_site.answer a, survey_user su, survey_user_group sug
                 WHERE q.id = a.id 
@@ -48,10 +48,10 @@ class evaluation
                 AND sug.course_short = su.course_short
                 AND s.title_short = ?
                 AND sug.course_short = ?                 
-                AND q.question = ?
+                AND q.id = ?
                 "
             );
-            $query->bind_param('sss', $this->title_short, $this->course_short, $question);
+            $query->bind_param('ssi', $this->title_short, $this->course_short, $id);
             $query->execute();
             $query->bind_result($value);
             $values= array();
@@ -59,6 +59,14 @@ class evaluation
                 $values[] = $value;
             }
             if(count($values)!=0) {
+                $query = getDbConnection()->prepare(
+                    "SELECT q.question FROM survey_site.question q
+                WHERE q.id = ?  "
+                );
+                $query->bind_param('i', $id);
+                $query->execute();
+                $resultQuestion = $query->get_result();
+                $question = $resultQuestion->fetch_assoc()['question'];
                 $results[$row] = array();
                 $results[$row][0] = $question;
                 $results[$row][1] = (array_sum($values)) / count($values);
